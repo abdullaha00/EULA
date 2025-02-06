@@ -1,0 +1,10 @@
+{
+    "name": "EULA",
+    "description": "Extension to help users understand Terms and Conditions of services and applications.",
+    "version": "0.1",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "popup/EULA.html"
+    },
+    "permissions": ["storage"]
+}
