@@ -6,5 +6,10 @@
     "action": {
       "default_popup": "popup/EULA.html"
     },
-    "permissions": ["storage"]
+    "permissions": ["storage"],
+    "content_scripts" : [{
+      "matches" : ["<all_urls>"],
+      "js" : ["/text_extraction/links.js"],
+      "run_at" : "document_end"
+          }]
 }

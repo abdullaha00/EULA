@@ -5,7 +5,6 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-
 phrases = ["policy", "terms", "privacy"]
 
 async function fetch_EULA_content(link) {
@@ -18,10 +17,14 @@ async function fetch_EULA_content(link) {
     return headings, texts;
 
 }
-console.log(encodeURIComponent("https://www.johnlewis.com/customer-services/shopping-with-us/privacy-notice"));
-
 app.get('/:link', async (request, response) => {
-    response.send(await fetch_EULA_content(request.params.link));
+    try{
+        console.log("good", decodeURIComponent(request.params.link))
+        response.send(await fetch_EULA_content(decodeURIComponent(request.params.link)));
+    }catch (error){
+        response.status(500).json({ error: error.message });''
+        console.log("bad", error.message, decodeURIComponent(request.params.link));
+    }
 });
 
 app.listen(process.env.PORT || 3000, () => console.log("App available on http://localhost:3000"))
