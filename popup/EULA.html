@@ -1,15 +1,14 @@
 <html>
-  <link rel="stylesheet" href="EULA.css">
+  <link rel="stylesheet" href="/popup/styles/EULA.css">
+
   <body>
-    <!--<button id="setBtn">storage test - set</button>
-    <button id="getBtn">storage test - get</button>-->
-    <textarea id="pastedEula" placeholder="Paste any EULA here."></textarea>
-    <button id="submitPastedEulaBtn">Analyse!</button>
-    <div id="analysisResult"></div>
-    <button id="HOME">Home</button>
-    <div id="content">view</div>
-    <script src="popup.js"></script>
-    <script src="/scripts/storage.js"></script>
-    <script src="/scripts/analysis.js"></script>
+    <ul id="navbar">
+      <li><a id="home">Home</a></li>
+      <li><a id="customEula">Custom EULA</a></li>
+      <li><a id="preferences">Preferences</a></li>
+    </ul>
+
+    <div id="content"></div>
+    <script src="/scripts/popup.js"></script>
   </body>
 </html>
