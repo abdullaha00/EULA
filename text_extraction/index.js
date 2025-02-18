@@ -27,4 +27,4 @@ app.get('/:link', async (request, response) => {
     }
 });
 
-app.listen(process.env.PORT || 3001, '0.0.0.0', () => console.log("App available"))
+app.listen(process.env.PORT || 3001, '0.0.0.0', () => console.log("App available at http://131.111.179.83:3001/ "))
