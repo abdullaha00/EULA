@@ -1,35 +1,101 @@
-import spacy
+from gensim.models import KeyedVectors
+import numpy as np
 
-# Load English language model 
-nlp = spacy.load("en_core_web_sm")
+# Load a pre-trained Word2Vec model (e.g., Google News vectors)
+word2vec_model = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
 
-def find_sentences_with_word(text, target_word):
-       
-    # Process the text
-    doc = nlp(text)
+# Predefined categories
+categories = ["privacy", "arbitration", "availability", "advertising", "security"]
+
+# Weights for combined score calculation
+w_freq = 0.4  # Weight for frequency
+w_sim = 0.6   # Weight for similarity
+
+# Function to calculate similarity
+def get_similarity(word1, word2):
+    try:
+        return word2vec_model.similarity(word1, word2)
+    except KeyError:
+        return 0
+
+# Function to normalize values using min-max scaling
+def min_max_normalize(values):
+    min_val = min(values)
+    max_val = max(values)
+    return [(x - min_val) / (max_val - min_val) if max_val != min_val else 0 for x in values]
+
+# Read the text file and extract words with their frequencies
+words = []
+frequencies = []
+with open('normalized_word_frequencies2.txt', 'r', encoding='utf-8') as file:
+    for line in file:
+        parts = line.split(':')
+        if len(parts) == 2:
+            word = parts[0].strip()
+            frequency = float(parts[1].strip())
+            words.append(word)
+            frequencies.append(frequency)
+
+# Normalize frequencies
+normalized_frequencies = min_max_normalize(frequencies)
+
+# Compare each word with the predefined categories
+all_similarities = []
+
+# First pass to collect all similarity scores
+for word in words:
+    word_similarities = []
+    for category in categories:
+        similarity = get_similarity(word, category)
+        word_similarities.append(similarity)
+    all_similarities.extend(word_similarities)
+
+# Calculate normalization parameters for similarities
+min_similarity = min(all_similarities)
+max_similarity = max(all_similarities)
+print("Min:", min_similarity)
+print("Max:", max_similarity)
+similarity_range = max_similarity - min_similarity
+
+# Second pass to get normalized scores and best categories
+results = []
+for word, frequency, norm_freq in zip(words, frequencies, normalized_frequencies):
+    best_category = None
+    best_similarity = -1
+    best_normalized_similarity = -1
     
-    # Get sentences containing the target word (case insensitive)
-    target_word = target_word.lower()
-    matching_sentences = [sent.text.strip() for sent in doc.sents 
-                        if target_word in sent.text.lower()]
+    for category in categories:
+        similarity = get_similarity(word, category)
+        # Min-max normalization for similarity
+        normalized_similarity = (similarity - min_similarity) / similarity_range if similarity_range != 0 else 0
+        
+        if normalized_similarity > best_normalized_similarity:
+            best_normalized_similarity = normalized_similarity
+            best_similarity = similarity
+            best_category = category
     
-    return matching_sentences
+    # Calculate combined score
+    combined_score = (w_freq * norm_freq) + (w_sim * best_normalized_similarity)
+    
+    results.append({
+        'word': word,
+        'frequency': frequency,
+        'category': best_category,
+        'original_similarity': best_similarity,
+        'normalized_similarity': best_normalized_similarity,
+        'normalized_frequency': norm_freq,
+        'combined_score': combined_score
+    })
 
-# open text file
-with open("file1.txt", 'r', encoding='utf-8') as file:
-    text = file.read()
+# Sort results by combined score in descending order
+results.sort(key=lambda x: x['combined_score'], reverse=True)
 
-word = "security"
-sentences = find_sentences_with_word(text, word)
-
-# print(f"\nSentences containing '{word}':")
-# for sentence in sentences:
-#     print(f"- {sentence}")
-
-for sentence in sentences:
-    doc = nlp(sentence)
-    #tokens = [token.text for token in doc]    
-    # Remove stop words and punctuation
-    clean_tokens = [token.text for token in doc if not token.is_stop and not token.is_punct]
-    print(f"Original: {sentence}")
-    print(f"Tokens: {clean_tokens}\n")
+# Save the results to a text file
+with open('word_category_similarity_results3.txt', 'w', encoding='utf-8') as output_file:
+    output_file.write("Rank, Word, Frequency, Most Similar Category, Original Similarity, Normalized Similarity, Normalized Frequency, Combined Score\n")
+    for rank, result in enumerate(results, 1):
+        output_file.write(
+            f"{rank}, {result['word']}, {result['frequency']}, {result['category']}, "
+            f"{result['original_similarity']:.4f}, {result['normalized_similarity']:.4f}, "
+            f"{result['normalized_frequency']:.4f}, {result['combined_score']:.4f}\n"
+        )
