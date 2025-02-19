@@ -1,5 +1,4 @@
 from gensim.models import KeyedVectors
-import numpy as np
 
 # Load a pre-trained Word2Vec model (e.g., Google News vectors)
 word2vec_model = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
@@ -60,37 +59,65 @@ similarity_range = max_similarity - min_similarity
 # Second pass to get normalized scores and best categories
 results = []
 for word, frequency, norm_freq in zip(words, frequencies, normalized_frequencies):
+    # Initialize variables for tracking best and second best
     best_category = None
+    second_best_category = None
     best_similarity = -1
+    second_best_similarity = -1
     best_normalized_similarity = -1
+    second_best_normalized_similarity = -1
     
+    # Track all category similarities to find best and second best
+    category_scores = []
     for category in categories:
         similarity = get_similarity(word, category)
         # Min-max normalization for similarity
         normalized_similarity = (similarity - min_similarity) / similarity_range if similarity_range != 0 else 0
         
-        if normalized_similarity > best_normalized_similarity:
-            best_normalized_similarity = normalized_similarity
-            best_similarity = similarity
-            best_category = category
+        category_scores.append({
+            'category': category,
+            'similarity': similarity,
+            'normalized_similarity': normalized_similarity
+        })
     
-    # Calculate combined score
-    combined_score = (w_freq * norm_freq) + (w_sim * best_normalized_similarity)
+    # Sort by normalized similarity to easily get top 2
+    category_scores.sort(key=lambda x: x['normalized_similarity'], reverse=True)
     
-    results.append({
-        'word': word,
-        'frequency': frequency,
-        'category': best_category,
-        'original_similarity': best_similarity,
-        'normalized_similarity': best_normalized_similarity,
-        'normalized_frequency': norm_freq,
-        'combined_score': combined_score
-    })
+    # Get best match
+    if len(category_scores) > 0:
+        best_similarity = category_scores[0]['similarity']
+        
+        # Only process this word if its best similarity is >= 0.25
+        if best_similarity >= 0.25:
+            best_category = category_scores[0]['category']
+            best_normalized_similarity = category_scores[0]['normalized_similarity']
+            
+            # Get second best match if it exists
+            if len(category_scores) > 1:
+                second_best_category = category_scores[1]['category']
+                second_best_similarity = category_scores[1]['similarity']
+                second_best_normalized_similarity = category_scores[1]['normalized_similarity']
+            
+            # Calculate combined score using best similarity
+            combined_score = (w_freq * norm_freq) + (w_sim * best_normalized_similarity)
+            
+            results.append({
+                'word': word,
+                'frequency': frequency,
+                'category': best_category,
+                'second_best_category': second_best_category,
+                'original_similarity': best_similarity,
+                'second_best_similarity': second_best_similarity,
+                'normalized_similarity': best_normalized_similarity,
+                'second_best_normalized_similarity': second_best_normalized_similarity,
+                'normalized_frequency': norm_freq,
+                'combined_score': combined_score
+            })
 
 # Sort results by combined score in descending order
 results.sort(key=lambda x: x['combined_score'], reverse=True)
 
-# Save the results to a text file
+##Save the results to a text file
 with open('word_category_similarity_results3.txt', 'w', encoding='utf-8') as output_file:
     output_file.write("Rank, Word, Frequency, Most Similar Category, Original Similarity, Normalized Similarity, Normalized Frequency, Combined Score\n")
     for rank, result in enumerate(results, 1):
@@ -98,4 +125,11 @@ with open('word_category_similarity_results3.txt', 'w', encoding='utf-8') as out
             f"{rank}, {result['word']}, {result['frequency']}, {result['category']}, "
             f"{result['original_similarity']:.4f}, {result['normalized_similarity']:.4f}, "
             f"{result['normalized_frequency']:.4f}, {result['combined_score']:.4f}\n"
+        )
+
+with open('Pure_word_list.txt', 'w', encoding='utf-8') as output_file:
+    #output_file.write("Rank, Word, Frequency, Most Similar Category, Original Similarity, Normalized Similarity, Normalized Frequency, Combined Score\n")
+    for rank, result in enumerate(results, 1):
+        output_file.write(
+            f"{result['word']}, {result['category']}, {result['second_best_category']}\n"
         )

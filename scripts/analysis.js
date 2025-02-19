@@ -1,22 +1,18 @@
-let submitBtn = document.getElementById('submitPastedEulaBtn')
+submitBtn = document.getElementById('submitPastedEulaBtn');
 
 if (submitBtn) {
-    let pastedEula = document.getElementById('pastedEula')
+    pastedEula = document.getElementById('pastedEula');
     if (pastedEula) {
-        submitBtn.addEventListener('click', () => {analyse(pastedEula.value)})
-    }
-    else {
-        console.log("EULA textarea is missing")
-        // TODO: handle error
+        submitBtn.addEventListener('click', () => {analyse(pastedEula.value);});
     }
 }
 
-let resultArea = document.getElementById('analysisResult')
-// handle not found
+resultArea = document.getElementById('analysisResult');
 
 function analyse(text) {
-    console.log("EULA submitted: " + text)
-    resultArea.textContent = "EULA submitted: " + text
+    if (resultArea) {
+        resultArea.textContent = "EULA submitted: " + text;
+    }
     // TODO: implement
     // @Alex
 }

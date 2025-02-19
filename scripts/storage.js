@@ -1,11 +1,11 @@
-let s = document.getElementById('setBtn')
+let s = document.getElementById('setBtn');
 if (s) {
-    s.addEventListener('click', () => {save()})
+    s.addEventListener('click', () => {save()});
 }
 
-let g = document.getElementById('getBtn')
+let g = document.getElementById('getBtn');
 if (g) {
-    g.addEventListener('click', () => {retrieve()})
+    g.addEventListener('click', () => {retrieve()});
 }
 
 // function save(key, val) {

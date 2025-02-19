@@ -1,6 +1,6 @@
 console.log("start test eula!");
 const phrases = ["policy", "terms", "privacy", "notice"];
-const base = 'http://localhost:3000/';
+const base = 'http://131.111.179.83:3001/';
 
 function find_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
