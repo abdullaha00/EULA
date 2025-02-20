@@ -8,14 +8,94 @@ if (g) {
     g.addEventListener('click', () => {retrieve()});
 }
 
-function save() {
-    chrome.storage.sync.set({ "key": "val" }).then(() => {
-        console.log("Value set");
-      });
+// function save(key, val) {
+//     chrome.storage.local.set({ [key]: val }).then(() => {
+//         return true
+//       });
+// }
+
+// function remove(key) {
+//     chrome.storage.local.remove([key]).then(() => {
+//         return true
+//       });
+// }
+
+// function retrieve(key) {
+//     return new Promise(resolve => {
+//         chrome.storage.local.get([key], function(items) {
+//             resolve(items)
+//         })
+//     })
+// }
+
+// function retrieveAll() {
+//     return new Promise(resolve => {
+//         chrome.storage.local.get(null, function(items) {
+//             resolve(items)
+//         })
+//     })
+// }
+
+
+let tempData = {
+    id : 0,
+    profiles : {
+        1 : {
+            name : "X",
+            logo : "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png", // og-icon
+            score : 2,
+            categories : {
+                1 : {
+                    name : "Privacy",
+                    score : 2,
+                    summary : "Privacy summary" 
+                },
+                2 : {
+                    name : "Tracking",
+                    score : 5,
+                    summary : "Tracking summary" 
+                }
+            }
+        },
+        2 : {
+            name : "Facebook",
+            logo : "https://www.facebook.com/apple-touch-icon.png", // apple-touch-icon
+            score: 1,
+            categories : {
+                1 : {
+                    name : "Privacy",
+                    score : 2,
+                    summary : "Privacy summary" 
+                },
+                2 : {
+                    name : "Tracking",
+                    score : 5,
+                    summary : "Tracking summary" 
+                }
+            }
+        },
+        3 : {
+            name : "Instagram",
+            logo : "https://static.cdninstagram.com/rsrc.php/v4/yG/r/De-Dwpd5CHc.png", // apple-touch-icon
+            score : 3,
+            categories : {
+                1 : {
+                    name : "Privacy",
+                    score : 2,
+                    summary : "Privacy summary" 
+                },
+                2 : {
+                    name : "Tracking",
+                    score : 5,
+                    summary : "Tracking summary" 
+                }
+            }
+        }
+
+    }
 }
 
-function retrieve() {
-    chrome.storage.sync.get(["key"]).then((result) => {
-        console.log("Value is " + result.key);
-      });
-}
+chrome.storage.local.set({tempData : [tempData]}, function() {
+    return true
+})
+

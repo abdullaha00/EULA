@@ -19,13 +19,12 @@ function categorizeSentences(sentences, categories) {
         }
   
         if (foundWords.length > 0) {
-          matchingCategories[categoryName] = foundWords;
+          matchingCategories[categoryName] = foundWords; // for debugging if needed, to remove 
         }
       }
   
       results.push({
         sentence: sentence,
-        categories: matchingCategories
       });
     }
   

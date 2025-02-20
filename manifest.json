@@ -11,5 +11,6 @@
       "matches" : ["<all_urls>"],
       "js" : ["/text_extraction/links.js"],
       "run_at" : "document_end"
+
           }]
 }
