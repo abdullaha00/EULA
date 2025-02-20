@@ -8,4 +8,4 @@ umask 0
 
 . ~/.nvm/nvm.sh
 NODE_ENV=production PORT="$SOCK_PATH" \
-    exec node /home/as3495/text_extraction/EULA/index.js
+    exec node /home/as3495/EULA/text_extraction/index.js
