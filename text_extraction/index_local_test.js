@@ -1,7 +1,7 @@
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-const cors = require("cors");
 const express = require("express");
+const cors = require("cors");
 const app = express();
 app.use(cors());
 
@@ -11,10 +11,10 @@ async function fetch_EULA_content(link) {
     const response = await fetch(link);
     const text = await response.text();
     const dom = new JSDOM(text);
-    const body = dom.window.document.body;
+    const body = dom.window.document;
     const headings = Array.from(body.querySelectorAll("h1, h2, h3")).map(h => h.textContent.trim());
     const texts = Array.from(body.querySelectorAll("p, li")).map(p => p.textContent.trim());
-    return {headings, texts};
+    return headings, texts;
 
 }
 app.get('/:link', async (request, response) => {
@@ -27,4 +27,4 @@ app.get('/:link', async (request, response) => {
     }
 });
 
-app.listen(process.env.PORT || 3001, '0.0.0.0', () => console.log("App available at http://131.111.179.83:3001/ "))
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => console.log("App available at http://localhost:3000/ "))
