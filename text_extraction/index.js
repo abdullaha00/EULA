@@ -17,7 +17,7 @@ async function fetch_EULA_content(link) {
     return {headings, texts};
 
 }
-app.get('/:link', async (request, response) => {
+app.get('/api/:link', async (request, response) => {
     try{
         console.log("good", decodeURIComponent(request.params.link))
         response.send(await fetch_EULA_content(decodeURIComponent(request.params.link)));

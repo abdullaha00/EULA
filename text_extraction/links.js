@@ -1,6 +1,6 @@
 console.log("start test eula!");
 const phrases = ["policy", "terms", "privacy", "notice"];
-const base = 'http://131.111.179.83:3001/';
+const base = 'https://as3495.user.srcf.net/';
 
 function find_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
@@ -12,7 +12,7 @@ function find_links(){
 
     relevant_links.forEach(link => {
         console.log(base.concat(encodeURIComponent(link)));
-        fetch(base.concat(encodeURIComponent(link)))
+        fetch(base.concat(encodeURIComponent(encodeURIComponent(link))))
         .then(res => res.json())
         .then(console.log)
     });
