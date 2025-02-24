@@ -7,26 +7,50 @@ window.onload = function() {
     })
     elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel)
 
-
-    // differentiate between click and drag for elements
-    var bubbles = document.querySelectorAll(".bubble")
-    bubbles.forEach(bubble => {
-        let startX
-        let startY
-        const threshold = 5
-        bubble.addEventListener("pointerdown", e => {
-            startX = e.pageX
-            startY = e.pageY
-            
-        })
-        bubble.addEventListener("pointerup", e => {
-            const diffX = Math.abs(e.pageX - startX)
-            const diffY = Math.abs(e.pageY - startY)
-
-            if (diffX < threshold && diffY < threshold) {
-                console.log("click");
-                
-            }
-        })
+    const resetPanzoom = document.getElementById("reset-panzoom")
+    resetPanzoom.addEventListener("click", () => {
+        panzoom.reset()
+        resetPanzoom.style.display = "none"
     })
+
+    elem.addEventListener("panzoomchange", (e) => {
+        resetPanzoom.style.display = "block"
+    })
+
+    // initially hide the reset button
+    setTimeout(() => {
+    resetPanzoom.style.display = "none"
+    }, 0)
+
+
+    // get the data from chrome.storage.local
+
+    chrome.storage.local.get(tempData, function (data) {
+        initPanel(data)
+    })
+}
+
+
+// resizes the graph if the viewport is resized
+onresize = (e) => {
+    if (isLoaded) {
+        reloadGraph(loaded)
+    }
+}
+
+// highlights both the tile and node
+function highlight(id) {
+    const tile = document.getElementById(`tile-${id}`)
+    const node = document.getElementById(`node-${id}`)
+
+    tile.classList.add('tile-highlight')
+    node.classList.add('node-highlight')
+}
+
+function unhighlight(id) {
+    const tile = document.getElementById(`tile-${id}`)
+    const node = document.getElementById(`node-${id}`)
+
+    tile.classList.remove('tile-highlight')
+    node.classList.remove('node-highlight')
 }

@@ -48,11 +48,49 @@ let tempData = {
                 1 : {
                     name : "Privacy",
                     score : 2,
+                    frequency: 10,
                     summary : "Privacy summary" 
                 },
                 2 : {
                     name : "Tracking",
                     score : 5,
+                    frequency: 10,
+                    summary : "Tracking summary" 
+                },
+                3 : {
+                    name : "3rd Party Usage",
+                    score : 1,
+                    frequency: 10,
+                    summary : "Tracking summary" 
+                },
+                4 : {
+                    name : "Dispute Resolution",
+                    score : 3,
+                    frequency: 10,
+                    summary : "Tracking summary" 
+                },
+                5 : {
+                    name : "Fees",
+                    score : 4,
+                    frequency: 10,
+                    summary : "Tracking summary" 
+                },
+                6 : {
+                    name : "Warranty",
+                    score : 1,
+                    frequency: 10,
+                    summary : "Tracking summary" 
+                },
+                7 : {
+                    name : "User obligations",
+                    score : 5,
+                    frequency: 10,
+                    summary : "Tracking summary" 
+                },
+                8 : {
+                    name : "Tracking",
+                    score : 5,
+                    frequency: 10,
                     summary : "Tracking summary" 
                 }
             }
@@ -65,11 +103,13 @@ let tempData = {
                 1 : {
                     name : "Privacy",
                     score : 2,
+                    frequency: 10,
                     summary : "Privacy summary" 
                 },
                 2 : {
                     name : "Tracking",
                     score : 5,
+                    frequency: 10,
                     summary : "Tracking summary" 
                 }
             }
@@ -82,11 +122,13 @@ let tempData = {
                 1 : {
                     name : "Privacy",
                     score : 2,
+                    frequency: 10,
                     summary : "Privacy summary" 
                 },
                 2 : {
                     name : "Tracking",
                     score : 5,
+                    frequency: 10,
                     summary : "Tracking summary" 
                 }
             }
