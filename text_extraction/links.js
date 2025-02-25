@@ -11,7 +11,7 @@ function find_links(){
     console.log(unique_links);
 
     relevant_links.forEach(link => {
-        console.log(base.concat(encodeURIComponent(link)));
+        console.log(base.concat(encodeURIComponent(encodeURIComponent(link))));
         fetch(base.concat(encodeURIComponent(encodeURIComponent(link))))
         .then(res => res.json())
         .then(console.log)
