@@ -20,6 +20,8 @@ document.getElementById("home").addEventListener("click", function () {
             document.getElementById("content").innerHTML = data;
         })
         .then(() => activate("home"))
+        .then(() => loadScript("/scripts/home.js"))
+
 });
 
 document.getElementById("customEula").addEventListener("click", function () {
