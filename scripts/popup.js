@@ -1,3 +1,12 @@
+// default to starting on home page
+fetch("/popup/pages/home.html")
+.then(response => response.text())
+.then(data => {
+    document.getElementById("content").innerHTML = data;
+})
+.then(() => activate("home"))
+.then(() => loadScript("/scripts/home.js"))
+
 // helper function
 function activate(id) {
     const navitems = document.querySelectorAll("#navbar>li>a")
