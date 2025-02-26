@@ -1,9 +1,9 @@
-const keywords = ["policy", "terms", "privacy", "notice"];
+const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 
 function find_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
-    .filter(a => keywords.some(phrase => a.textContent.toLowerCase().includes(phrase)))
+    .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
     .map(a => a.href);
 
     const unique_links = [...new Set(relevant_links)];
