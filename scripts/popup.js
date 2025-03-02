@@ -1,3 +1,5 @@
+console.log("popup loaded succesfully");
+
 // default to starting on home page
 fetch("/popup/pages/home.html")
 .then(response => response.text())
@@ -50,4 +52,15 @@ document.getElementById("preferences").addEventListener("click", function () {
             document.getElementById("content").innerHTML = data;
         })
         .then(() => activate("preferences"))
+});
+
+
+document.getElementById("websites").addEventListener("click", function () {
+    fetch("/popup/pages/websites.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("content").innerHTML = data;
+        })
+        .then(() => activate("websites"))
+        .then(() => loadScript("/scripts/websites.js"))
 });
