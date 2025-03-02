@@ -1,15 +1,61 @@
 <html>
-  <link rel="stylesheet" href="/popup/styles/EULA.css">
-
+  <head>
+    <link rel="stylesheet" href="/popup/styles/EULA.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  </head>
   <body>
-    <ul id="navbar">
+    <div>
+      <div class="extension-main">
+
+        <div class="logo-container">
+          <img src="../resources/EULAV.svg" class="extension-logo">
+          <div class="extension-name">EULAV</div>
+        </div>
+        
+        <div id="content-container">
+
+          <div id="home-content" class="content">
+            <div class="search-bar-container">
+              <div class="search-bar-inner">
+                <div class="search-icon"></div>
+                <input type="text" id="search-bar" placeholder="Search">
+              </div>
+            </div>
+            <div id="all-app-container">
+            </div>
+          </div>
+
+          <div id="panel-content" class="content">
+            YEAH
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="sidebar-container">
+        <div id="home" class="sidebar-icon"></div>
+        <div id="add-eula" class="sidebar-icon"></div>
+        <div id="preferences" class="sidebar-icon"></div>
+        <a href="graph/graph.html" target="_blank"><div id="graph" class="sidebar-icon"></div></a>
+      </div>
+      
+    </div>
+
+    <!-- <ul id="navbar">
       <li><a id="home">Home</a></li>
       <li><a id="customEula">Custom EULA</a></li>
       <li><a id="preferences">Preferences</a></li>
       <li><a href="graph/graph.html" target="_blank">Graph</a></li>
       <li><a id="websites">Websites</a></li>
-    </ul>
-    <div id="content"></div>
+    </ul> -->
+    
+    <!-- <div id="content"></div> -->
+    <script src="../lib/fuse.js"></script>
+    <script src="../scripts/storage.js"></script>
     <script src="/scripts/popup.js"></script>
   </body>
 </html>

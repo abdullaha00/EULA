@@ -1,30 +1,176 @@
 body {
-  width: 400px;
-  height: 200px; 
-}
-
-ul {
-  list-style-type: none;
+  width: 700px;
+  height: 500px; 
+  background-color: whitesmoke;
+  border-radius: 50px;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #bbbbbb;
+  font-family: "Poppins", serif;
 }
 
-li {
+.logo-container {
+  height: 80px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding-top: 10px;
+  padding-left: 20px;
+}
+
+.extension-logo {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  padding-right: 10px;
+}
+
+.extension-name {
+  font-family: "Montserrat";
+  font-weight: 700;
+  display: inline-block;
+  color: black;
+  font-size: 32px;
+  cursor: default;
+}
+
+
+.extension-main {
+  position: relative;
+  height: 100%;
   float: left;
+  width: 87%
 }
 
-li>a {
-  display: block;
-  padding: 8px;
+
+
+.sidebar-container {
+  background-color: rgb(231, 231, 231);
+  width: 10%;
+  height: 100%;
   text-align: center;
+  padding: 0 10px;
+  display: inline-block;
 }
 
-li>a.active {
-  background-color: #dddddd;
+.sidebar-icon {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin: 10px 0;
+  border-radius: 100px;
+  cursor: pointer;
+  background-size: 30px 30px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-li>a:hover:not(.active) {
-  background-color: #999999;
+#home {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/home.svg");
+}
+#add-eula {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/plus.svg");
+}
+#preferences {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/user.svg");
+}
+#graph {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/EULA.png");
+}
+
+.sidebar-icon:hover {
+  background-color: rgb(218, 218, 218);
+}
+
+
+
+.search-bar-container {
+  text-align: center;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/search.svg");
+  background-size: 15px 15px;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.3;
+}
+
+#search-bar {
+  border: none;
+  background-color: rgb(228, 228, 228);
+  border-radius: 100px;
+  line-height: 15px;
+  height: 40px;
+  width: 250px;
+  padding: 0 36px;
+  font-size: 18px;
+  font-family: "Poppins";
+  transition: background-color ease 0.2s;
+}
+
+#search-bar:focus {
+  outline: none;
+  background-color: rgb(212, 212, 212);
+}
+
+.search-bar-inner {
+  display: inline-block;
+}
+
+#all-app-container {
+  height: 320px;
+  overflow: auto;
+  scrollbar-width: none;
+  position: relative;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.app {
+  background-color: whitesmoke;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  display: inline-block;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.274);
+  cursor: pointer;
+  transition: filter 0.2s ease;
+  background-position: center;
+  background-size: 80px;
+  background-repeat: no-repeat;
+}
+
+.app:hover {
+  filter: brightness(0.8)
+}
+
+.content {
+  animation: forwards ease 0.2s loadIn 
+}
+
+@keyframes loadIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#panel-content {
+  display: none;
+}
+
+.app-container {
+  display: inline-block;
+  margin: 10px;
+}
+
+.app-name {
+  color: gray;
+  margin-top: 5px;
 }

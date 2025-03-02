@@ -1,20 +1,30 @@
 {
-    "name": "EULA",
+    "name": "EULAV | EULA Visualiser",
     "description": "Extension to help users understand Terms and Conditions of services and applications.",
     "version": "0.1",
     "manifest_version": 3,
     "action": {
       "default_popup": "popup/EULA.html"
     },
-    "permissions": ["storage", "activeTab", "scripting"],
+    "permissions": [
+      "storage",
+      "activeTab",
+      "scripting"
+    ],
     "background" : {
       "service_worker": "/scripts/background.js"
     },
-    "content_scripts": [
-   {
-     "matches": ["<all_urls>"],
-     "js": ["/scripts/content.js"],
-     "type": "module"
-   }
- ]
+    "icons" : {
+      "16" : "resources/EULA.png",
+      "32" : "resources/EULA.png",
+      "48" : "resources/EULA.png",
+      "128" : "resources/EULA.png"
+    },
+    "web_accessible_resources": [
+      {
+        "resources": ["resources/*"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+
 }

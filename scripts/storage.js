@@ -1,12 +1,12 @@
-let s = document.getElementById('setBtn');
-if (s) {
-    s.addEventListener('click', () => {save()});
-}
+// let s = document.getElementById('setBtn');
+// if (s) {
+//     s.addEventListener('click', () => {save()});
+// }
 
-let g = document.getElementById('getBtn');
-if (g) {
-    g.addEventListener('click', () => {retrieve()});
-}
+// let g = document.getElementById('getBtn');
+// if (g) {
+//     g.addEventListener('click', () => {retrieve()});
+// }
 
 // function save(key, val) {
 //     chrome.storage.local.set({ [key]: val }).then(() => {
@@ -137,7 +137,7 @@ let tempData = {
     }
 }
 
-chrome.storage.local.set({tempData : [tempData]}, function() {
+chrome.storage.local.set({"tempData" : [tempData]}, function() {
     return true
 })
 

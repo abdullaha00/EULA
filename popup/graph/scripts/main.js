@@ -25,8 +25,8 @@ window.onload = function() {
 
     // get the data from chrome.storage.local
 
-    chrome.storage.local.get(tempData, function (data) {
-        initPanel(data)
+    chrome.storage.local.get("tempData", function (data) {
+        initPanel(data.tempData[0])
     })
 }
 
