@@ -1,6 +1,4 @@
 
-let data = null;
-
 chrome.storage.local.get(["tempData"], function(res) {
 
     console.log(res.tempData[0]);
@@ -8,6 +6,7 @@ chrome.storage.local.get(["tempData"], function(res) {
     document.dispatchEvent(new CustomEvent("dataLoaded", {detail: data}));
 
 });
+
 
 function refresh(data, filter="") {
 
