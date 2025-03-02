@@ -7,21 +7,14 @@ function find_links(){
     .map(a => a.href);
 
     const unique_links = [...new Set(relevant_links)];
-
-    relevant_links.forEach(link => {
+    unique_linkslinks.forEach(link => {
         fetch(base.concat(encodeURIComponent(encodeURIComponent(link))))
         .then(res => res.json())
         .then(console.log)
     });
 }
 
-if (document.readyState === "loading") {
-    setTimeout(() => {
-        find_links();
-    }, 1000);
-} else {
-    setTimeout(() => {
-        find_links();
-    }, 1000);
-    
-}
+
+setTimeout(() => {
+    find_links();
+}, 1000);
