@@ -1,0 +1,406 @@
+body {
+    margin: 0;
+    font-family: "Poppins", serif;
+    font-weight: 300
+}   
+
+
+.side-panel {
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    margin: 0 0 0 20px;
+    width: 400px;
+    height: 95%;
+    background-color: whitesmoke;
+    border-radius: 20px;
+    box-shadow: 5px 5px 20px 1px rgba(0, 0, 0, 0.3);
+    cursor: default
+}
+.main-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.main-background {
+    position: absolute;
+    background-color: #e5e5f7;
+    opacity: 0.1;
+    background: radial-gradient(circle, transparent 20%, #e5e5f7 20%, #e5e5f7 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #e5e5f7 20%, #e5e5f7 80%, transparent 80%, transparent) 17.5px 17.5px, linear-gradient(#000000 1.4000000000000001px, transparent 1.4000000000000001px) 0 -0.7000000000000001px, linear-gradient(90deg, #000000 1.4000000000000001px, #e5e5f7 1.4000000000000001px) -0.7000000000000001px 0;
+    background-size: 35px 35px, 35px 35px, 17.5px 17.5px, 17.5px 17.5px;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.side-panel-header {
+    height: 10%;
+    position: relative;
+    align-content: center;
+}
+
+
+#side-panel-header {
+    margin: 0;
+    font-weight: 600;
+    font-size: 38px;
+}
+
+.app-name-header {
+    margin-left: 60px !important
+}
+
+.side-panel-contents {
+    position: relative;
+    height: 100%;
+    margin: 0 20px;
+    vertical-align: center;
+}
+
+#side-panel-apps-container {
+    height: 90%;
+    overflow: auto;
+    text-align: center;
+    scrollbar-width: none;
+}
+.app {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+    background-color: whitesmoke;
+    box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform ease 0.2s;
+    background-size: 80px;
+}
+
+.app:hover {
+    transform: scale(1.02);
+}
+
+.app-container {
+    display: inline-block;
+    margin: 5px 15px;
+    animation: load ease 1s forwards
+}
+
+@keyframes load {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.app-name {
+    color: gray;
+    font-weight: 400;
+}
+
+.content {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.fixed-column {
+    padding-right: 30px;
+}
+
+.flex-column {
+    position: relative;
+    flex: 1;
+    background-color: rgba(128, 128, 128, 0.2);
+
+}
+
+.graph-container {
+    box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.267);
+    position:absolute;
+    height: 100%;
+    width: 100%;
+}
+
+#back-button {
+    font-size: 30px;
+    font-weight: 500;
+    color: gray;
+    position: absolute;
+    border-radius: 50px;
+    text-align: center;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+    margin-top: 5px;
+    display: none;
+}
+
+#back-button:hover {
+    background-color: rgba(128, 128, 128, 0.205);
+}
+
+#app-information-container {
+    height: 90%;
+    overflow: auto;
+    display: none;
+    scrollbar-width: none;
+}
+
+.segment {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    border-radius: 100px;
+    border: 10px solid red;
+}
+
+#app-score-container {
+    position: relative;
+    width: 100%;
+    height: 130px;
+}
+
+#app-score-value {
+    position: absolute;
+    color: black;
+    height: 100%;
+    line-height: 100px;
+    font-size: 20px;
+    font-weight: 500;
+    left: 50%;
+    transform: translateX(-50%);
+    
+}
+
+#app-score {
+    position:absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#app-score-container-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    font-size: 16px;
+    color: gray;
+}
+
+
+.non-selectable {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.category-tile {
+    padding: 20px 20px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    transition: background-color ease 0.2s;
+    position: relative;
+    vertical-align: middle;
+    animation: load ease 1s forwards;
+}
+
+.category-tile:hover {
+    background-color: rgba(128, 128, 128, 0.1);
+}
+
+
+
+#app-category-container {
+    margin-top: 30px;
+}
+
+.category-title {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.category-summary {
+    color: gray
+}
+
+.category-content {
+    display: inline-block;
+    width: 60%;
+    position: relative;
+    height: 50px;
+}
+
+.category-image {
+    width: 50px;
+    height: 50px;
+    float: left;
+    margin-right: 10px;
+}
+
+.category-score {
+    float: right;
+}
+
+
+#graph-default-text {
+    display: inline-block;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    text-align: center;
+    color: gray
+}
+
+#reset-panzoom {
+    position: relative;
+    font-size: 30px;
+    font-weight: 500;
+    float: right;
+    background-color: gray;
+    border-radius: 100px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 5;
+    margin: 10px;
+    line-height: 50px;
+    color: white;
+    display: none;
+}
+
+#reset-panzoom:hover {
+    background-color: rgb(121, 121, 121);
+}
+
+.bubble {
+    cursor: default;
+}
+
+
+.node-title {
+    font-weight: 500;
+    position: absolute;
+    top: 0;
+}
+
+.tile-highlight {
+    transition: background-color ease 0.2s;
+    background-color: rgba(128, 128, 128, 0.1);
+}
+
+.node-highlight {
+    transition: filter 0.2s ease;
+    filter: brightness(0.8);
+}
+/* above css is from graph.css to ensure stylistic consisteny*/
+
+/* Center the survey form */
+.centered-survey {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full width */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.survey-container {
+    max-width: 800px; /* Increase max-width for more space */
+    width: 90%; /* Use 90% of the available width */
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    font-size: 1.1rem;
+    overflow: hidden; /* Prevent overflow */
+}
+
+.survey-container h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    font-size: 2rem;
+}
+
+.survey-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 80vh; /* Limit height to 80% of viewport height */
+    overflow-y: auto; /* Add vertical scroll if needed */
+    padding-right: 10px; /* Add padding to prevent scrollbar overlap */
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+.radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1.1rem; 
+}
+
+.radio-group label, .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.form-select, .form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-textarea {
+    resize: vertical;
+}
+
+.submit-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    width: 100%;
+    font-size: 1.2rem; 
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background-color: #2980b9;
+}
