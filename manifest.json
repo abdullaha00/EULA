@@ -19,10 +19,10 @@
       "service_worker": "/scripts/background.js"
     },
     "icons" : {
-      "16" : "resources/EULA.png",
-      "32" : "resources/EULA.png",
-      "48" : "resources/EULA.png",
-      "128" : "resources/EULA.png"
+      "16" : "resources/EULAV.png",
+      "32" : "resources/EULAV.png",
+      "48" : "resources/EULAV.png",
+      "128" : "resources/EULAV.png"
     },
     "web_accessible_resources": [
       {
