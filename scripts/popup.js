@@ -16,11 +16,6 @@
 //     });
 //     document.getElementById(id).classList.add("active");
 // }
-// function loadScript(src) {
-//     var script = document.createElement('script');
-//     script.src = src;
-//     document.head.appendChild(script);  
-// }
 
 // add event listeners for navbar
 // document.getElementById("home").addEventListener("click", function () {
@@ -64,6 +59,13 @@
 //         .then(() => loadScript("/scripts/websites.js"))
 // });
 
+function loadScript(src) {
+    var script = document.createElement('script');
+    script.src = src;
+    document.head.appendChild(script);  
+}
+
+
 function hidePanel() {
     // delete contents of panel content
     const panelContent = document.getElementById("panel-content")
@@ -99,7 +101,12 @@ function loadAddEula() {
     hidePanel()
     
     const content = document.getElementById("panel-content")
-    content.innerText ="loadAddEula"
+    fetch("/popup/pages/add.html")
+        .then(response => response.text())
+        .then(data => {
+            content.innerHTML = data;
+        })
+        .then(() => loadScript("/scripts/analysis.js"))
 
     content.style.display = "block"
 }
