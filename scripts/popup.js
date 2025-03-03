@@ -165,6 +165,63 @@ function search(arr, fuse) {
     
 }
 
+function loadAppPanel(app) {
+    hideHome()
+    const panelContent = document.getElementById("panel-content")
+    
+    const appHeader = document.createElement("div")
+    appHeader.classList.add("panel-app-header")
+
+    const appIcon = document.createElement("div")
+    appIcon.classList.add("panel-app-icon")
+    appIcon.style.backgroundImage = `url(${app.logo})`
+
+    const appTitle = document.createElement("div")
+    appTitle.classList.add("panel-app-title")
+    appTitle.innerText = `${app.name}`
+
+    
+    const appHeaderBackground = document.createElement("div")
+    appHeaderBackground.classList.add("panel-app-header-background") 
+
+    const appHeaderBackButton = document.createElement("div")
+    appHeaderBackButton.classList.add("panel-app-header-back-button")
+    appHeaderBackButton.innerText = "<"
+    appHeaderBackButton.addEventListener("click", loadHome)
+
+    const appScoreContainer = document.createElement("div")
+    appScoreContainer.classList.add("panel-app-score-container")
+    const appScoreSummary = document.createElement("div")
+    appScoreSummary.classList.add("panel-app-score-summary")
+    appScoreSummary.innerText = "This is some placeholder text for the overall app score summary. Why this app got this score, what kind of app it is etc."
+
+    const arc = createScoreArc(app.score, 120)
+    arc.classList.add("panel-arc")
+
+    const arcContainer = document.createElement("div")
+    const arcValue = document.createElement("div")
+    arcValue.innerText = `${app.score}/5`
+    arcValue.classList.add("panel-arc-value")
+    arcContainer.classList.add("panel-arc-container")
+
+    arcContainer.appendChild(arc)
+    arcContainer.appendChild(arcValue)
+
+    appScoreContainer.appendChild(arcContainer)
+    appScoreContainer.appendChild(appScoreSummary)
+
+
+    appHeader.appendChild(appIcon)
+    appHeader.appendChild(appTitle)
+    appHeader.appendChild(appHeaderBackButton)
+    appHeader.appendChild(appHeaderBackground)
+    panelContent.appendChild(appHeader)
+
+    panelContent.appendChild(appScoreContainer)
+
+    panelContent.style.display = "block"
+}
+
 
 chrome.storage.local.get("tempData", function (data) {
     initHome(data.tempData[0])
