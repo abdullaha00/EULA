@@ -114,6 +114,12 @@ function loadPreferences() {
     content.style.display = "block"
 }
 
+function highlight(){
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+        chrome.runtime.sendMessage({action: "highlight", tabId: tabs[0].id});
+    })
+}
+
 function initHome(data) {
 
     let container = document.getElementById("all-app-container")
@@ -265,3 +271,4 @@ let apps
 document.getElementById("home").addEventListener("click", loadHome)
 document.getElementById("add-eula").addEventListener("click", loadAddEula)
 document.getElementById("preferences").addEventListener("click", loadPreferences)
+document.getElementById("highlight").addEventListener("click", highlight)
