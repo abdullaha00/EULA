@@ -13,6 +13,4 @@ function analyse(text) {
     if (resultArea) {
         resultArea.textContent = "EULA submitted: " + text;
     }
-    // TODO: implement
-    // @Alex
 }
