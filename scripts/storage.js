@@ -49,7 +49,7 @@ let tempData = {
                     name : "Privacy",
                     score : 2,
                     frequency: 10,
-                    summary : "Privacy summary" 
+                    summary : "Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary" 
                 },
                 2 : {
                     name : "Tracking",
@@ -137,6 +137,7 @@ let tempData = {
     }
 }
 
+// COMMENT THIS OUT LATER
 chrome.storage.local.set({"tempData" : [tempData]}, function() {
     return true
 })

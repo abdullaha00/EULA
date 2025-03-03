@@ -144,7 +144,7 @@ function initHome(data) {
         newAppName.innerText = `${value.name}`
 
         newApp.addEventListener("click", function () {
-            loadAppPanel(value)
+            loadAppPanel(id, value)
         })
 
         newAppContainer.appendChild(newApp)
@@ -178,7 +178,7 @@ function search(arr, fuse) {
     
 }
 
-function loadAppPanel(app) {
+function loadAppPanel(id, app) {
     hideHome()
     const panelContent = document.getElementById("panel-content")
     
@@ -200,7 +200,7 @@ function loadAppPanel(app) {
     const appHeaderBackButton = document.createElement("div")
     appHeaderBackButton.classList.add("panel-app-header-back-button")
     appHeaderBackButton.innerText = "<"
-    appHeaderBackButton.addEventListener("click", loadHome)
+    appHeaderBackButton.addEventListener("click", () => {loadHome()})
 
     const appScoreContainer = document.createElement("div")
     appScoreContainer.classList.add("panel-app-score-container")
@@ -223,6 +223,42 @@ function loadAppPanel(app) {
     appScoreContainer.appendChild(arcContainer)
     appScoreContainer.appendChild(appScoreSummary)
 
+    const appCategoryContainer = document.createElement("div")
+    appCategoryContainer.classList.add("panel-app-category-container")
+
+    for (const [id, cat] of Object.entries(app.categories)) {
+        const category = document.createElement("div")
+        const categoryIcon = document.createElement("img")
+        const categoryTextContainer = document.createElement("div")
+        const categoryName = document.createElement("div")
+        const categorySummary = document.createElement("div")
+        const categoryArc = createScoreArc(cat.score, 60)
+
+        category.classList.add("panel-category")
+        categoryIcon.classList.add("panel-category-icon")
+        categoryTextContainer.classList.add("panel-category-text-container")
+        categoryName.classList.add("panel-category-name")
+        categorySummary.classList.add("panel-category-summary")
+        categoryArc.classList.add("panel-category-arc")
+
+        categoryIcon.src = `../resources/icons/${id}.svg`
+        categoryName.innerText = `${cat.name}`
+        categorySummary.innerText = `${cat.summary}`
+
+        categoryTextContainer.appendChild(categoryName)
+        categoryTextContainer.appendChild(categorySummary)
+        category.appendChild(categoryIcon)
+        category.appendChild(categoryTextContainer)
+        category.appendChild(categoryArc)
+
+        appCategoryContainer.appendChild(category)
+    }
+
+    const deleteButton = document.createElement("div")
+    deleteButton.classList.add("panel-delete-button")
+    deleteButton.addEventListener("click", () => {deleteProfile(id)})
+    deleteButton.innerText = "Remove Profile"
+
 
     appHeader.appendChild(appIcon)
     appHeader.appendChild(appTitle)
@@ -232,7 +268,30 @@ function loadAppPanel(app) {
 
     panelContent.appendChild(appScoreContainer)
 
+    panelContent.appendChild(appCategoryContainer)
+
+    panelContent.appendChild(deleteButton)
+
     panelContent.style.display = "block"
+}
+
+function deleteProfile(id) {
+
+    chrome.storage.local.get("tempData", function (data) {
+        const obj = data.tempData[0]
+        const profiles = obj.profiles
+        
+        delete profiles[id]
+
+        chrome.storage.local.set({"tempData" : [obj]}, function() {
+            return true
+        })
+        apps = obj
+
+        clearHome()
+        initHome(apps)
+        loadHome()
+    })
 }
 
 

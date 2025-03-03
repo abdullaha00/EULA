@@ -49,7 +49,7 @@ body {
   text-align: center;
   padding: 0 10px;
   display: inline-block;
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.259);
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);
   z-index: 10;
   position: relative;
 }
@@ -155,7 +155,10 @@ body {
 }
 
 .content {
-  animation: forwards ease 0.2s loadIn 
+  animation: forwards ease 0.2s loadIn;
+  overflow: auto;
+  scrollbar-width: none;
+  height: 410px;
 }
 
 @keyframes loadIn {
@@ -184,6 +187,7 @@ body {
 .panel-app-header {
   text-align: center;
   position: relative;
+  margin-top: 10px;
 }
 
 .panel-app-icon {
@@ -232,6 +236,7 @@ body {
   font-size: 16px;
   margin-top: 5px;
   padding-bottom: 10px;
+  font-weight: 500;
 }
 
 .panel-arc {
@@ -269,5 +274,58 @@ body {
 
 .panel-app-score-container {
   position: relative;
-  margin: 20px
+  margin: 40px 20px
+}
+
+
+.panel-category {
+  margin: 50px 30px;
+  position: relative;
+}
+
+.panel-category-icon {
+  width: 60px;
+  height: 60px;
+  float: left;
+}
+
+.panel-category > div {
+  display: inline-block;
+}
+
+.panel-category-arc {
+  float: right;
+}
+
+.panel-category-text-container {
+  margin-left: 10px;
+  color: gray;
+  width: 400px;
+}
+
+.panel-category-name {
+  font-weight: 500;
+  font-size: 16;
+}
+
+.panel-delete-button {
+  background-color: #FF033E;
+  width: 150px;
+  height: 40px;
+  float: right;
+  margin: 50px 20px 20px 0;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.199);
+  line-height: 40px;
+  vertical-align: middle;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.panel-delete-button:hover {
+  filter: brightness(0.9)
 }
