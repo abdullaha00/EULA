@@ -1,3 +1,5 @@
+// script to perform analysis on user submitted EULA
+
 submitBtn = document.getElementById('submitPastedEulaBtn');
 
 if (submitBtn) {

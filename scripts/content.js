@@ -1,3 +1,5 @@
+// automatic popup script
+
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 const modal = document.createElement("div");

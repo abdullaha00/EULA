@@ -1,3 +1,6 @@
+// main extension script
+
+
 // default to starting on home page
 // fetch("/popup/pages/home.html")
 //     .then(response => response.text())
@@ -107,16 +110,6 @@ function loadAddEula() {
             content.innerHTML = data;
         })
         .then(() => loadScript("/scripts/analysis.js"))
-
-    content.style.display = "block"
-}
-
-function loadPreferences() {
-    hideHome()
-    hidePanel()
-    
-    const content = document.getElementById("panel-content")
-    content.innerText = "loadPreferences"
 
     content.style.display = "block"
 }
@@ -336,5 +329,4 @@ chrome.storage.local.get("tempData", function (data) {
 let apps
 document.getElementById("home").addEventListener("click", loadHome)
 document.getElementById("add-eula").addEventListener("click", loadAddEula)
-document.getElementById("preferences").addEventListener("click", loadPreferences)
 document.getElementById("highlight").addEventListener("click", highlight)
