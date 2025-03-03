@@ -1,7 +1,7 @@
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 
-function find_links(){
+function scrape_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
     .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
     .map(a => a.href);

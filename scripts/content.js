@@ -5,6 +5,7 @@ modal.innerHTML = `
 <div class="modal" id="myModal">
   <div class="modal-content">
     <span class="close">&times;</span>
+
     <h1>New EULAs Detected</h1>
     <button id="addEULA">Add Platform</button>
   </div>
@@ -68,7 +69,7 @@ h1 {
 }
 `
 
-function find_links(){
+function scrape_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
     .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
     .map(a => a.href);
@@ -96,7 +97,7 @@ for (const id in tempData.profiles){
 
 if (!match){
     setTimeout(() => {
-        let found = find_links();
+        let found = scrape_links();
         if (found > 0){
             document.head.appendChild(style);
             document.body.appendChild(modal);
