@@ -1,0 +1,86 @@
+.popup-container {
+    background-color: rgba(245, 245, 245, 0.6);
+    backdrop-filter: blur(10px);
+    width: 600px;
+    height: 400px;
+    position: fixed;
+    right: 120px;
+    top: 0;
+    z-index: 9999;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.3);
+    animation: loadIn ease 0.2s forwards;
+    cursor:move
+}
+
+
+.popup-logo-container {
+    height: 80px;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+@keyframes loadIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+  
+.popup-logo {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    padding-right: 10px;
+}
+
+.popup-logo-name {
+    font-weight: 700;
+    display: inline-block;
+    color: black;
+    font-size: 32px;
+    cursor: default;
+}
+
+.popup-close-button {
+    font-size: 30px;
+    float: right;
+    top: 20px;
+    right: 20px;
+    position: relative;
+    color: gray;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 100px;
+}
+
+.popup-close-button:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+#reshow-popup-button {
+    background-color: rgba(245, 245, 245, 0.6);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    width: 80px;
+    height: 80px;
+    background-size: 40px;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 40px;
+    animation: loadIn ease 0.2s forwards;
+    box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
