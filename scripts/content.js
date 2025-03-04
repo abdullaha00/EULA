@@ -87,8 +87,6 @@ function showPopup() {
 
   popupContainer.appendChild(headerContainer)
 
-
-
   // load fonts
   const poppinsFontFace = new FontFace('Poppins', `url(${chrome.runtime.getURL("resources/fonts/Poppins/Poppins-Regular.ttf")})`);
   poppinsFontFace.load().then((loadedFont) => {
@@ -117,14 +115,6 @@ function showPopup() {
   
 }
 
-
-
-
-
-
-
-
-
 function scrape_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
     .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
@@ -141,7 +131,7 @@ function scrape_links(){
 
 chrome.storage.local.get(["tempData"], function (data) {
     console.log(window.location.hostname);
-    console.log("testing here:", data.tempData[0])
+    console.log("testing here:", data["tempData"][0])
     const tempData = data.tempData[0] 
     let match = false
     const currentHost = window.location.hostname;
@@ -156,24 +146,8 @@ chrome.storage.local.get(["tempData"], function (data) {
         setTimeout(() => {
             let found = scrape_links();
             if (found > 0){
-                document.head.appendChild(style);
-                document.body.appendChild(modal);
-                const myModal = document.getElementById("myModal");
-                const allClose = document.getElementsByClassName("close")
-                const button = document.getElementById("addEULA");
-                const span = allClose[allClose.length - 1]
-                span.onclick = function() {
-                    modal.style.display = "none";
-                };
-                window.onclick = function(event) {
-                    if (event.target == myModal) {
-                      modal.style.display = "none";
-                    }
-                  };
-                button.onclick = function(){
-                    console.log("added!")
-                }
-                
+              console.log("work")
+              showPopup()
             }
             
         }, 1000);
