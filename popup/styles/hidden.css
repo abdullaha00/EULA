@@ -1,0 +1,26 @@
+button {
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    color: #fff;
+    background-color: #ff0000;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    align-items: center;
+    display:flex;
+    justify-content: center;
+}
+
+li {
+    font-size: 30px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.center-items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

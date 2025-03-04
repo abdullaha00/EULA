@@ -14,7 +14,7 @@ function addHiddenProfile() {
     chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
       closePopup()
     });
-  })
+  });
 }
 
 
