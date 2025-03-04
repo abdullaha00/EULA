@@ -1,3 +1,5 @@
+// user preferences script
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('surveyForm');
     
