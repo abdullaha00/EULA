@@ -19,6 +19,7 @@ function loadGraph(data) {
     let arr = []
     for (const [k,v] of Object.entries(data)) {
         v.id = k
+        v.name = categoryMap[k]
         arr.push(v)
     }
     console.log(arr);

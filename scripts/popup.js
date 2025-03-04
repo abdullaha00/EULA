@@ -1,6 +1,6 @@
 // main extension script
 
-
+// old popup (deprecated)
 // default to starting on home page
 // fetch("/popup/pages/home.html")
 //     .then(response => response.text())
@@ -250,7 +250,7 @@ function loadAppPanel(id, app) {
         categoryArc.classList.add("panel-category-arc")
 
         categoryIcon.src = `../resources/icons/${id}.svg`
-        categoryName.innerText = `${cat.name}`
+        categoryName.innerText = `${categoryMap[id]}`
         categorySummary.innerText = `${cat.summary}`
 
         categoryTextContainer.appendChild(categoryName)

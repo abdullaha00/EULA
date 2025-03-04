@@ -107,7 +107,8 @@ function loadAppPanel(value) {
         const categoryTitle = document.createElement("div")
         const categorySummary = document.createElement("div")
         const categoryContent = document.createElement("div")
-        categoryTitle.innerText = `${cat.name}`
+        
+        categoryTitle.innerText = `${categoryMap[id]}`
         categoryTitle.classList.add("category-title")
         categorySummary.innerText = `${cat.summary}`
         categorySummary.classList.add("category-summary")

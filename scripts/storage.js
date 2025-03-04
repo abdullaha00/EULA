@@ -38,6 +38,24 @@
 //     })
 // }
 
+const categoryMap = {
+    1  : "Grant of License",
+    2  : "Restrictions of Use",
+    3  : "Ownership & IP",
+    4  : "User responsibilities",
+    5  : "Privacy & Data",
+    6  : "Security",
+    7  : "Third-party Services",
+    8  : "Fees and Payments",
+    9  : "Updates and Modifications",
+    10 : "Support and Maintenance",
+    11 : "Warranties",
+    12 : "Liability",
+    13 : "Dispute Resolution",
+    14 : "Governing Law",
+    15 : "Changes to EULA"
+}
+
 
 let tempData = {
     id : 0,
@@ -49,49 +67,41 @@ let tempData = {
             score : 2,
             categories : {
                 1 : {
-                    name : "Privacy",
                     score : 2,
                     frequency: 10,
                     summary : "Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary Privacy summary" 
                 },
                 2 : {
-                    name : "Tracking",
                     score : 5,
                     frequency: 10,
                     summary : "Tracking summary" 
                 },
                 3 : {
-                    name : "3rd Party Usage",
                     score : 1,
                     frequency: 10,
                     summary : "Tracking summary" 
                 },
                 4 : {
-                    name : "Dispute Resolution",
                     score : 3,
                     frequency: 10,
                     summary : "Tracking summary" 
                 },
                 5 : {
-                    name : "Fees",
                     score : 4,
                     frequency: 10,
                     summary : "Tracking summary" 
                 },
                 6 : {
-                    name : "Warranty",
                     score : 1,
                     frequency: 10,
                     summary : "Tracking summary" 
                 },
                 7 : {
-                    name : "User obligations",
                     score : 5,
                     frequency: 10,
                     summary : "Tracking summary" 
                 },
                 8 : {
-                    name : "Tracking",
                     score : 5,
                     frequency: 10,
                     summary : "Tracking summary" 
@@ -105,13 +115,11 @@ let tempData = {
             score: 1,
             categories : {
                 1 : {
-                    name : "Privacy",
                     score : 2,
                     frequency: 10,
                     summary : "Privacy summary" 
                 },
                 2 : {
-                    name : "Tracking",
                     score : 5,
                     frequency: 10,
                     summary : "Tracking summary" 
@@ -125,13 +133,11 @@ let tempData = {
             score : 3,
             categories : {
                 1 : {
-                    name : "Privacy",
                     score : 2,
                     frequency: 10,
                     summary : "Privacy summary" 
                 },
                 2 : {
-                    name : "Tracking",
                     score : 5,
                     frequency: 10,
                     summary : "Tracking summary" 
@@ -139,7 +145,8 @@ let tempData = {
             }
         }
 
-    }, hidden : []
+    }, 
+    hidden : []
 }
 
 // COMMENT THIS OUT LATER

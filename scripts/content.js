@@ -3,6 +3,29 @@
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 
+const categoryMap = {
+  1  : "Grant of License",
+  2  : "Restrictions of Use",
+  3  : "Ownership & IP",
+  4  : "User responsibilities",
+  5  : "Privacy & Data",
+  6  : "Security",
+  7  : "Third-party Services",
+  8  : "Fees and Payments",
+  9  : "Updates and Modifications",
+  10 : "Support and Maintenance",
+  11 : "Warranties",
+  12 : "Liability",
+  13 : "Dispute Resolution",
+  14 : "Governing Law",
+  15 : "Changes to EULA"
+}
+
+
+function getPageIcon() {
+  return "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png" // TODO
+}
+
 function addProfile() {
 
 }
@@ -130,7 +153,61 @@ function showPopup() {
   headerContainer.appendChild(closeButton)
   headerContainer.appendChild(hideButton)
 
+  const infoContainer = document.createElement("div")
+  infoContainer.classList.add("popup-info-container")
+  const siteIcon = document.createElement("img")
+  siteIcon.classList.add("popup-site-icon")
+  siteIcon.src = getPageIcon()
+  const siteName = document.createElement("div")
+  siteName.classList.add("popup-site-name")
+  siteName.innerText = window.location.hostname
+  const siteBackground = document.createElement("div")
+  siteBackground.classList.add("popup-site-background")
+
+  infoContainer.appendChild(siteIcon)
+  infoContainer.appendChild(siteName)
+  infoContainer.appendChild(siteBackground)
+
+
+  const arcsContainer = document.createElement("div")
+  arcsContainer.classList.add("popup-arcs-container")
+
+  const mainScoreArcContainer = document.createElement("div")
+  mainScoreArcContainer.classList.add("popup-main-score-arc-container")
+  const mainScoreArc = createScoreArc(3, 180)
+  mainScoreArc.classList.add("popup-main-score-arc")
+
+  const mainScoreValue = document.createElement("div")
+  mainScoreValue.classList.add("popup-main-score-value")
+  mainScoreValue.innerText = "3/5"
+
+  mainScoreArcContainer.appendChild(mainScoreArc)
+  mainScoreArcContainer.appendChild(mainScoreValue)
+
+
+  const categoriesContainer = document.createElement("div")
+  categoriesContainer.classList.add("popup-categories-container")
+
+  for ([id, val] of Object.entries(categoryMap)) {
+    const categoryContainer = document.createElement("div")
+    const categoryIcon = document.createElement("div")
+    const categoryArc = createScoreArc(5, 80)
+    
+    categoryContainer.classList.add("popup-category-container")
+    categoryIcon.classList.add("popup-category-icon")
+    categoryArc.classList.add("popup-category-arc")
+
+    categoryContainer.appendChild(categoryIcon)
+    categoryContainer.appendChild(categoryArc)
+    categoriesContainer.appendChild(categoryContainer)
+  }
+
+  arcsContainer.appendChild(mainScoreArcContainer)
+  arcsContainer.appendChild(categoriesContainer)
+
   popupContainer.appendChild(headerContainer)
+  popupContainer.appendChild(infoContainer)
+  popupContainer.appendChild(arcsContainer)
   popupContainer.appendChild(footerContainer)
 
   // load fonts
@@ -144,6 +221,7 @@ function showPopup() {
   poppinsMediumFontFace.load().then((loadedFont) => {
       document.fonts.add(loadedFont);
       footerContainer.style.fontFamily = "'Poppins-medium', sans-serif"
+      arcsContainer.style.fontFamily = "'Poppins-medium', sans-serif"
   }).catch((err) => console.error("Font failed to load:", err));
   
   const montserratFontFace = new FontFace('Montserrat', `url(${chrome.runtime.getURL("resources/fonts/Montserrat/static/Montserrat-Bold.ttf")})`);
@@ -198,9 +276,11 @@ chrome.storage.local.get(["tempData"], function (data) {
         break;
       }
     }
+    match = false
     if (!match){
         setTimeout(() => {
             let found = scrape_links();
+            found = 1
             if (found > 0){
               showPopup()
             }
