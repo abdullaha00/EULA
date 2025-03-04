@@ -4,11 +4,17 @@ const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 
 function addProfile() {
-  return
+
 }
 
 function addHiddenProfile() {
-  return
+  const currentHost = window.location.hostname;
+  chrome.storage.local.get(["tempData"], function (data) {
+    data["tempData"][0]["hidden"].push(currentHost);
+    chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
+      closePopup()
+    });
+  })
 }
 
 
@@ -115,7 +121,7 @@ function showPopup() {
   const dontShowButton = document.createElement("div")
   dontShowButton.classList.add("dont-show-button")
   dontShowButton.classList.add("popup-bottom-button")
-  dontShowButton.innerText = "Don't Show Again"
+  dontShowButton.innerText = "Don't Show On This Site "
   dontShowButton.addEventListener("click", addHiddenProfile) // TODO
 
   footerContainer.appendChild(addButton)
@@ -182,20 +188,17 @@ chrome.storage.local.get(["tempData"], function (data) {
     const currentHost = window.location.hostname;
     for (const id in tempData.profiles){
         if (currentHost === tempData.profiles[id].hostname){
-            console.log("this is an added page")
             match = true;
             break;
         }
     }
-    for (const id in tempData.hidden){
-      if (currentHost === tempData.profiles[id].hostname){
-        console.log("hidden page")
+    for (const host of tempData.hidden){
+      if (currentHost === host){
         match = true;
         break;
       }
     }
     if (!match){
-      console.log("this is a new page")
         setTimeout(() => {
             let found = scrape_links();
             if (found > 0){

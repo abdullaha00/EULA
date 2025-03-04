@@ -139,13 +139,7 @@ let tempData = {
             }
         }
 
-    },
-    hidden : {
-        1 : {
-            hostname : "www.google.com"
-        }
-
-    }
+    }, hidden : []
 }
 
 // COMMENT THIS OUT LATER
