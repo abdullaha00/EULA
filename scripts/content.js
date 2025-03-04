@@ -130,23 +130,29 @@ function scrape_links(){
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
-    console.log(window.location.hostname);
-    console.log("testing here:", data["tempData"][0])
+    console.log(data["tempData"][0])
     const tempData = data.tempData[0] 
     let match = false
     const currentHost = window.location.hostname;
     for (const id in tempData.profiles){
-        console.log(tempData.profiles[id].hostname)
         if (currentHost === tempData.profiles[id].hostname){
+            console.log("this is an added page")
             match = true;
             break;
         }
     }
+    for (const id in tempData.hidden){
+      if (currentHost === tempData.profiles[id].hostname){
+        console.log("hidden page")
+        match = true;
+        break;
+      }
+    }
     if (!match){
+      console.log("this is a new page")
         setTimeout(() => {
             let found = scrape_links();
             if (found > 0){
-              console.log("work")
               showPopup()
             }
             
