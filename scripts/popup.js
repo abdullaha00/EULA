@@ -120,6 +120,21 @@ function highlight(){
     })
 }
 
+function loadHiddenSites(){
+    hideHome()
+    hidePanel()
+    
+    const content = document.getElementById("panel-content")
+    fetch("/popup/pages/hidden.html")
+        .then(response => response.text())
+        .then(data => {
+            content.innerHTML = data;
+        })
+        .then(() => loadScript("/scripts/hiddenSites.js"))
+
+    content.style.display = "block"
+}
+
 function initHome(data) {
 
     let container = document.getElementById("all-app-container")
@@ -330,3 +345,4 @@ let apps
 document.getElementById("home").addEventListener("click", loadHome)
 document.getElementById("add-eula").addEventListener("click", loadAddEula)
 document.getElementById("highlight").addEventListener("click", highlight)
+document.getElementById("hidden-sites").addEventListener("click", loadHiddenSites)

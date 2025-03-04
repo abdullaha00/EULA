@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             privacy_concern: form.querySelector('input[name="privacy_concern"]:checked')?.value,
             content_creation: form.querySelector('input[name="content_creation"]:checked')?.value,
             litigation_concern: form.querySelector('input[name="litigation_concern"]:checked')?.value,
+            security_concern: form.querySelector('input[name="security_concern"]:checked')?.value,
             timestamp: new Date().toISOString() // Add a timestamp for tracking
         };
 

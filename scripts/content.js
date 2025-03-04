@@ -3,6 +3,21 @@
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 
+function addProfile() {
+
+}
+
+function addHiddenProfile() {
+  const currentHost = window.location.hostname;
+  chrome.storage.local.get(["tempData"], function (data) {
+    data["tempData"][0]["hidden"].push(currentHost);
+    chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
+      closePopup()
+    });
+  });
+}
+
+
 
 function hidePopup() {
   // hide popup
@@ -12,6 +27,11 @@ function hidePopup() {
   // add button to redisplay popup
   const reshowPopupButton = document.getElementById("reshow-popup-button")
   reshowPopupButton.style.display = "block"
+}
+
+function closePopup() {
+  const popup = document.getElementById("popup-container")
+  popup.style.display = "none"
 }
 
 function dragElement(elmnt) {
@@ -79,21 +99,51 @@ function showPopup() {
   headerContainer.appendChild(logoContainer)
 
   const closeButton = document.createElement("div")
-  closeButton.classList.add("popup-close-button")
+  closeButton.classList.add("popup-corner-button")
   closeButton.innerHTML = "&times"
-  closeButton.addEventListener("click", hidePopup)
+  closeButton.addEventListener("click", closePopup)
+
+  const hideButton = document.createElement("div")
+  hideButton.classList.add("popup-corner-button")
+  hideButton.classList.add("popup-hide-button")
+  hideButton.innerHTML ="&#8964"
+  hideButton.addEventListener("click", hidePopup)
+
+  const footerContainer = document.createElement("div")
+  footerContainer.classList.add("popup-footer")
+
+  const addButton = document.createElement("div")
+  addButton.classList.add("add-button")
+  addButton.classList.add("popup-bottom-button")
+  addButton.innerText = "Add Profile"
+  addButton.addEventListener("click", addProfile) // TODO
+
+  const dontShowButton = document.createElement("div")
+  dontShowButton.classList.add("dont-show-button")
+  dontShowButton.classList.add("popup-bottom-button")
+  dontShowButton.innerText = "Don't Show On This Site "
+  dontShowButton.addEventListener("click", addHiddenProfile) // TODO
+
+  footerContainer.appendChild(addButton)
+  footerContainer.appendChild(dontShowButton)
 
   headerContainer.appendChild(closeButton)
+  headerContainer.appendChild(hideButton)
 
   popupContainer.appendChild(headerContainer)
-
-
+  popupContainer.appendChild(footerContainer)
 
   // load fonts
   const poppinsFontFace = new FontFace('Poppins', `url(${chrome.runtime.getURL("resources/fonts/Poppins/Poppins-Regular.ttf")})`);
   poppinsFontFace.load().then((loadedFont) => {
       document.fonts.add(loadedFont);
       popupContainer.style.fontFamily = "'Poppins', sans-serif"
+  }).catch((err) => console.error("Font failed to load:", err));
+  
+  const poppinsMediumFontFace = new FontFace('Poppins-medium', `url(${chrome.runtime.getURL("resources/fonts/Poppins/Poppins-Medium.ttf")})`);
+  poppinsMediumFontFace.load().then((loadedFont) => {
+      document.fonts.add(loadedFont);
+      footerContainer.style.fontFamily = "'Poppins-medium', sans-serif"
   }).catch((err) => console.error("Font failed to load:", err));
   
   const montserratFontFace = new FontFace('Montserrat', `url(${chrome.runtime.getURL("resources/fonts/Montserrat/static/Montserrat-Bold.ttf")})`);
@@ -117,14 +167,6 @@ function showPopup() {
   
 }
 
-
-
-
-
-
-
-
-
 function scrape_links(){
     const relevant_links = Array.from(document.querySelectorAll('a'))
     .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
@@ -140,43 +182,29 @@ function scrape_links(){
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
-    console.log(window.location.hostname);
-    console.log("testing here:", data.tempData[0])
+    console.log(data["tempData"][0])
     const tempData = data.tempData[0] 
     let match = false
     const currentHost = window.location.hostname;
     for (const id in tempData.profiles){
-        console.log(tempData.profiles[id].hostname)
         if (currentHost === tempData.profiles[id].hostname){
             match = true;
             break;
         }
     }
+    for (const host of tempData.hidden){
+      if (currentHost === host){
+        match = true;
+        break;
+      }
+    }
     if (!match){
         setTimeout(() => {
             let found = scrape_links();
             if (found > 0){
-                document.head.appendChild(style);
-                document.body.appendChild(modal);
-                const myModal = document.getElementById("myModal");
-                const allClose = document.getElementsByClassName("close")
-                const button = document.getElementById("addEULA");
-                const span = allClose[allClose.length - 1]
-                span.onclick = function() {
-                    modal.style.display = "none";
-                };
-                window.onclick = function(event) {
-                    if (event.target == myModal) {
-                      modal.style.display = "none";
-                    }
-                  };
-                button.onclick = function(){
-                    console.log("added!")
-                }
-                
+              showPopup()
             }
             
         }, 1000);
     }
 ;});
-

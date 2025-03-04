@@ -44,6 +44,7 @@ let tempData = {
     profiles : {
         1 : {
             name : "X",
+            hostname : "x.com",
             logo : "https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png", // og-icon
             score : 2,
             categories : {
@@ -99,8 +100,8 @@ let tempData = {
         },
         2 : {
             name : "Facebook",
-            logo : "https://www.facebook.com/apple-touch-icon.png", // apple-touch-icon
             hostname : "www.facebook.com",
+            logo : "https://www.facebook.com/apple-touch-icon.png", // apple-touch-icon
             score: 1,
             categories : {
                 1 : {
@@ -138,11 +139,19 @@ let tempData = {
             }
         }
 
-    }
+    }, hidden : []
 }
 
 // COMMENT THIS OUT LATER
-chrome.storage.local.set({"tempData" : [tempData]}, function() {
-    return true
+chrome.storage.local.get(["tempData"], function(data) {
+    if(data == null){
+        console.log("init")
+        chrome.storage.local.set({"tempData" : [tempData]}, function() {
+        return true
+    })}
+    
 })
+
+
+
 

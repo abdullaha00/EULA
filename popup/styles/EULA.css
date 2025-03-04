@@ -78,6 +78,9 @@ body {
 #highlight {
   background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/highlight.svg");
 }
+#hidden-sites {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/hidden.svg");
+}
 #graph {
   background-image: url("chrome-extension://__MSG_@@extension_id__/resources/EULA.png");
 }
