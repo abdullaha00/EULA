@@ -98,6 +98,7 @@ let tempData = {
         2 : {
             name : "Facebook",
             logo : "https://www.facebook.com/apple-touch-icon.png", // apple-touch-icon
+            hostname : "www.facebook.com",
             score: 1,
             categories : {
                 1 : {
@@ -116,6 +117,7 @@ let tempData = {
         },
         3 : {
             name : "Instagram",
+            hostname : "www.instagram.com",
             logo : "https://static.cdninstagram.com/rsrc.php/v4/yG/r/De-Dwpd5CHc.png", // apple-touch-icon
             score : 3,
             categories : {

@@ -83,42 +83,44 @@ function scrape_links(){
     return unique_links.length
 };
 
-const tempData = chrome.storage.local.get();
-
-let match = false
-const currentHost = window.location.hostname;
-for (const id in tempData.profiles){
-    console.log(tempData.profiles[id].hostname)
-    if (currentHost === tempData.profiles[id].hostname){
-        match = true;
-        break;
+chrome.storage.local.get(["tempData"], function (data) {
+    console.log(window.location.hostname);
+    console.log("testing here:", data.tempData[0])
+    const tempData = data.tempData[0] 
+    let match = false
+    const currentHost = window.location.hostname;
+    for (const id in tempData.profiles){
+        console.log(tempData.profiles[id].hostname)
+        if (currentHost === tempData.profiles[id].hostname){
+            match = true;
+            break;
+        }
     }
-};
-
-if (!match){
-    setTimeout(() => {
-        let found = scrape_links();
-        if (found > 0){
-            document.head.appendChild(style);
-            document.body.appendChild(modal);
-            const myModal = document.getElementById("myModal");
-            const allClose = document.getElementsByClassName("close")
-            const button = document.getElementById("addEULA");
-            const span = allClose[allClose.length - 1]
-            span.onclick = function() {
-                modal.style.display = "none";
-            };
-            window.onclick = function(event) {
-                if (event.target == myModal) {
-                  modal.style.display = "none";
+    if (!match){
+        setTimeout(() => {
+            let found = scrape_links();
+            if (found > 0){
+                document.head.appendChild(style);
+                document.body.appendChild(modal);
+                const myModal = document.getElementById("myModal");
+                const allClose = document.getElementsByClassName("close")
+                const button = document.getElementById("addEULA");
+                const span = allClose[allClose.length - 1]
+                span.onclick = function() {
+                    modal.style.display = "none";
+                };
+                window.onclick = function(event) {
+                    if (event.target == myModal) {
+                      modal.style.display = "none";
+                    }
+                  };
+                button.onclick = function(){
+                    console.log("added!")
                 }
-              };
-            button.onclick = function(){
-                console.log("added!")
+                
             }
             
-        }
-        
-    }, 1000);
-}
-console.log(match);
+        }, 1000);
+    }
+;});
+
