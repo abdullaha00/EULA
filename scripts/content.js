@@ -77,14 +77,12 @@ function addHiddenProfile() {
   chrome.storage.local.get(["tempData"], function (data) {
     let loc = data.tempData[0].hidden.length
     for (const id in data.tempData[0].hidden){
-      console.log(id, currentHost, data.tempData[0].hidden[id], currentHost.localeCompare(data.tempData[0].hidden[id]))
       if (currentHost.localeCompare(data.tempData[0].hidden[id]) === -1){
         loc = id;
         break
       };
     } 
     data.tempData[0].hidden.splice(loc, 0, currentHost)
-    console.log(data.tempData[0].hidden)
     chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
       closePopup()
     });
@@ -400,11 +398,9 @@ chrome.storage.local.get(["tempData"], function (data) {
         break;
       }
     }
-    match = false // to remove
     if (!match){
         setTimeout(() => {
             let found = scrape_links();
-            found = 1 // to remove
             if (found > 0){
               showPopup()
             }
