@@ -124,6 +124,7 @@
 .popup-site-icon {
     width: 80px;
     height: 80px;
+    object-fit: cover;
     padding: 5px;
     box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.192);
     background-color: whitesmoke;
@@ -135,6 +136,7 @@
     height: 70px;
     border: 5px whitesmoke solid;
     background-color: rgb(182, 56, 255);
+    color: white;
     text-align: center;
     font-size: 50px;
     line-height: 70px;
