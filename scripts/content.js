@@ -400,11 +400,11 @@ chrome.storage.local.get(["tempData"], function (data) {
         break;
       }
     }
-    match = false // to remove
+    // match = false // to remove
     if (!match){
         setTimeout(() => {
             let found = scrape_links();
-            found = 1 // to remove
+            // found = 1 // to remove
             if (found > 0){
               showPopup()
             }
