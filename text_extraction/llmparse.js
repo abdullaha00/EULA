@@ -34,7 +34,6 @@ async function getLLMResponse(prompt) {
 }
 
 async function askLLMForAll(sentences) {
-
     console.log("Processing sentences...");
     const results = [];
     for (let i = 0; i < sentences.length; i++) {
@@ -43,14 +42,14 @@ async function askLLMForAll(sentences) {
         const categoryResponse = await getLLMResponse(categoryPrompt);
         
         // Add a delay between requests
-        await new Promise(resolve => setTimeout(resolve, 1000)); // in milisecs
+        await new Promise(resolve => setTimeout(resolve, 1000)); // in milliseconds
 
         // Get the importance score for the sentence
-        const scorePrompt = `Answer with only one number and nothing else. On a scale of 1 to 5, where 1 is least important and 5 is most important, rate how important this sentence is to a user in the context of a EULA compared to potentially other sentences: '${sentences[i]}'. Answer with only the number.`;
+        const scorePrompt = `Answer with only one decimal and nothing else. On a scale from 0 to 1, where 0 is least important and 1 is most important, rate how important this sentence is to a user in the context of a EULA, ranked against potential other sentences: '${sentences[i]}'. Answer with only the decimal. A sentence picked at random from a EULA should have a uniform distribution.`;
         const scoreResponse = await getLLMResponse(scorePrompt);
 
-        // Parse the score as an integer (ensure it's within the valid range)
-        const score = scoreResponse; 
+        // Parse the score as a float (ensure it's within the valid range)
+        const score = parseFloat(scoreResponse); 
 
         results.push({
             sentence: sentences[i],
@@ -59,10 +58,56 @@ async function askLLMForAll(sentences) {
         });
 
         // Add a delay between requests
-        await new Promise(resolve => setTimeout(resolve, 1000)); // in milisecs
+        await new Promise(resolve => setTimeout(resolve, 1000)); // in milliseconds
     }
 
     return results;
+}
+
+// Function to assign ranks based on quintiles
+function assignRanks(sortedResults) {
+    const totalItems = sortedResults.length;
+    const quintileSize = Math.ceil(totalItems / 5); // Size of each quintile
+
+    return sortedResults.map((result, index) => {
+        const quintile = Math.floor(index / quintileSize) + 1; // Determine quintile (1 to 5)
+        return {
+            ...result,
+            rank: quintile
+        };
+    });
+}
+
+// Function to calculate the average rank for each category
+function calculateCategoryAverageRanks(rankedResults, categories) {
+    const categoryMap = {};
+
+    // Initialize all categories with totalRank: 0 and count: 0
+    categories.forEach(category => {
+        categoryMap[category] = { totalRank: 0, count: 0 };
+    });
+
+    // Group sentences by category and calculate total rank and count
+    rankedResults.forEach(result => {
+        const { category, rank } = result;
+
+        if (categoryMap[category]) {
+            categoryMap[category].totalRank += rank;
+            categoryMap[category].count += 1;
+        }
+    });
+
+    // Calculate the average rank for each category
+    const categoryAverageRanks = {};
+    for (const category of categories) {
+        const { totalRank, count } = categoryMap[category];
+        const averageRank = count > 0 ? totalRank / count : 0; // Default to 0 if no sentences in the category
+
+        // Round the average rank to the nearest integer (1 to 5)
+        categoryAverageRanks[category] = Math.round(averageRank);
+    }
+
+    return categoryAverageRanks;
 }
 
 const categories = [
@@ -101,7 +146,27 @@ const sentences = [
     "We reserve the right to modify this EULA at any time." // Changes to EULA
 ];
 
+// Call the function and transform the output
 askLLMForAll(sentences).then(results => {
-    console.log("Sentence to Category and Importance Score Mapping:");
-    console.log(results);
+    console.log("Original Output:");
+    console.log(results); // Original output (array of objects)
+
+    // Sort the results based on importanceScore (ascending order)
+    const sortedResults = results.sort((a, b) => a.importanceScore - b.importanceScore);
+
+    // Assign ranks based on quintiles
+    const rankedResults = assignRanks(sortedResults);
+
+    console.log("Ranked Output:");
+    console.log(rankedResults); // Output with ranks
+
+    // Transform the ranked results into triples
+    const triples = rankedResults.map(result => [result.sentence, result.category, result.importanceScore, result.rank]);
+    console.log("Transformed Output (Triples with Ranks):");
+    console.log(triples); // Outputs a list of triples (sentence, category, score, rank)
+
+    // Calculate category average ranks (using the ranks already assigned)
+    const categoryAverageRanks = calculateCategoryAverageRanks(rankedResults, categories);
+    console.log("Category Average Ranks (1 to 5, with 0 for missing categories):");
+    console.log(categoryAverageRanks); // Outputs a hashmap of category to average rank
 });
