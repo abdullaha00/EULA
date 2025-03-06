@@ -1,5 +1,5 @@
 import {askLLMForAll} from '../text_extraction/llmparse.js';
-import {categorizeSentences, categories, sentences} from '../text_extraction/filterutils.js';
+import {categorizeSentences, categories, sentences} from '../text_extraction/filter.js';
 import {exampleSurveyData, example_category_array, score_user_preferences} from './score-multiplier.js';
 
 // Main analysis pipeline
