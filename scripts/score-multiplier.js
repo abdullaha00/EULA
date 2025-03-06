@@ -15,9 +15,17 @@
 //     "security_concern": "moderately_concerned",
 //     "timestamp": "2025-03-04T11:30:24.631Z"
 // }
+export const exampleSurveyData = {
+    "age_group": "Above 60",
+    "content_creation": "sometimes",
+    "litigation_concern": "not_concerned",
+    "privacy_concern": "slightly_concerned",
+    "security_concern": "moderately_concerned",
+    "timestamp": "2025-03-04T11:30:24.631Z"
+};
 
 // Predefined categories with default multiplier of 1
-const category_array = {
+export const example_category_array = {
     "Grant of License": 1,
     "Restrictions of Use": 1,
     "Ownership & IP": 1,
@@ -35,7 +43,7 @@ const category_array = {
     "Changes to EULA": 1,
 };
 
-function score_user_preferences(surveyData) {
+export function score_user_preferences(surveyData, category_array) {
     // Ensure a valid survey result is passed
     if (!surveyData) {
         console.error("No survey data provided");
@@ -116,15 +124,8 @@ async function getSurveyResults() {
     }
 }
 
-// Usage example (for debugging)
-// const exampleSurveyData = {
-//     "age_group": "Above 60",
-//     "content_creation": "sometimes",
-//     "litigation_concern": "not_concerned",
-//     "privacy_concern": "slightly_concerned",
-//     "security_concern": "moderately_concerned",
-//     "timestamp": "2025-03-04T11:30:24.631Z"
-// };
+//Usage example (for debugging)
 
-// const adjustedScores = score_user_preferences(exampleSurveyData);
+
+// const adjustedScores = score_user_preferences(exampleSurveyData, example_category_array);
 // console.log(adjustedScores);
