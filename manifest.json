@@ -9,11 +9,16 @@
     "permissions": [
       "storage",
       "activeTab",
-      "scripting"
+      "scripting",
+      "tabs"
+    ],
+    "host_permissions": [
+    "http://*/*",
+    "https://*/*" 
     ],
     "content_scripts" : [{
       "matches": ["<all_urls>"],
-      "js": ["/scripts/content.js"]
+      "js": ["lib/d3.v7.min.js", "lib/create_arc.js", "/scripts/content.js"]
     }],
     "background" : {
       "service_worker": "/scripts/background.js"
@@ -26,7 +31,7 @@
     },
     "web_accessible_resources": [
       {
-        "resources": ["resources/*", "popup/styles/popup.css"],
+        "resources": ["resources/*", "popup/styles/popup.css", "lib/*"],
         "matches": ["<all_urls>"]
       }
     ]

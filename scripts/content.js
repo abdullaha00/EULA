@@ -3,8 +3,70 @@
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 
+const categoryMap = {
+  1  : "Grant of License",
+  2  : "Restrictions of Use",
+  3  : "Ownership & IP",
+  4  : "User responsibilities",
+  5  : "Privacy & Data",
+  6  : "Security",
+  7  : "Third-party Services",
+  8  : "Fees and Payments",
+  9  : "Updates and Modifications",
+  10 : "Support and Maintenance",
+  11 : "Warranties",
+  12 : "Liability",
+  13 : "Dispute Resolution",
+  14 : "Governing Law",
+  15 : "Changes to EULA"
+}
+
+const colors = {
+  red :   "rgb(255,69,58)",
+  orange: "rgb(255,159,10)",
+  yellow: "rgb(255,214,10)",
+  green:  "rgb(48,209,88)",
+  mint:   "rgb(99,230,226)",
+  teal:   "rgb(64,200,224)",
+  cyan:   "rgb(100,210,255)",
+  blue:   "rgb(10,132,255)",
+  indigo: "rgb(94,92,230)",
+  purple: "rgb(191,90,242)",
+  pink:   "rgb(255,55,95)"
+}
+
+function getRandomColor() {
+  const keys = Object.keys(colors);
+  return colors[keys[ keys.length * Math.random() << 0]];
+}
+
+
+function getPageIcon() {
+
+  // find icons from link tags
+  const links = document.getElementsByTagName("link")
+  for (const link of links) {
+    if (link.getAttribute("rel") == "apple-touch-icon" || (link.getAttribute("rel") == "icon" && link.getAttribute("rel")=="image/png")) {
+      return link.getAttribute("href")
+    }
+  }
+
+  // find icons from meta tags
+  const meta = document.getElementsByTagName("meta")
+  for (const tag of meta) {
+    if (tag.getAttribute("property")=="og:image") {
+      return tag.getAttribute("content")
+    }
+  }
+  
+  // no page icon found
+  return false
+}
+
 function addProfile() {
 
+  
+  
 }
 
 function addHiddenProfile() {
@@ -33,16 +95,16 @@ function addHiddenProfile() {
 
 function hidePopup() {
   // hide popup
-  const popup = document.getElementById("popup-container")
+  const popup = document.getElementById("popup-host").shadowRoot.getElementById("popup-container")
   popup.style.display = "none"
 
   // add button to redisplay popup
-  const reshowPopupButton = document.getElementById("reshow-popup-button")
+  const reshowPopupButton = document.getElementById("popup-host").shadowRoot.getElementById("reshow-popup-button")
   reshowPopupButton.style.display = "block"
 }
 
 function closePopup() {
-  const popup = document.getElementById("popup-container")
+  const popup = document.getElementById("popup-host").shadowRoot.getElementById("popup-container")
   popup.style.display = "none"
 }
 
@@ -79,7 +141,32 @@ function dragElement(elmnt) {
   }
 }
 
+function showHint(e) {
+  const id = e.currentTarget.id
+  const categoryHint = document.getElementById("popup-host").shadowRoot.getElementById(`popup-category-hint-${id}`)
+  categoryHint.style.display = "inline-block"
+}
+
+function hideHint(e) {
+  const id = e.currentTarget.id
+  const categoryHint = document.getElementById("popup-host").shadowRoot.getElementById(`popup-category-hint-${id}`)
+  categoryHint.style.display = "none"
+}
+
+function moveHint(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+
+  const id = e.currentTarget.id
+  const categoryHint = document.getElementById("popup-host").shadowRoot.getElementById(`popup-category-hint-${id}`)
+  
+  categoryHint.style.transform = `translateX(${e.clientX-rect.left}px) translateY(${e.clientY - rect.top}px)`
+}
+
 function showPopup() {
+
+  const host = document.createElement("span")
+  host.setAttribute("id", "popup-host")
+  const shadow = host.attachShadow({mode: "open"})
 
   const reshowPopupButton = document.createElement("div")
   reshowPopupButton.setAttribute("id", "reshow-popup-button")
@@ -142,7 +229,101 @@ function showPopup() {
   headerContainer.appendChild(closeButton)
   headerContainer.appendChild(hideButton)
 
+  const infoContainer = document.createElement("div")
+  infoContainer.classList.add("popup-info-container")
+  
+
+  // set the page icon to default if no page icon found
+  let siteIcon
+  const pageIconSrc = getPageIcon()
+  if (!pageIconSrc) {
+    siteIcon = document.createElement("div")
+    siteIcon.classList.add("popup-site-icon")
+    siteIcon.classList.add("popup-site-default-icon")
+
+    // get the letter to be displayed instead
+    const name = window.location.hostname
+    let letter = name[0]
+    if (name.length > 3 && name.substring(0,3)=="www") {
+      letter = name[4]
+    }
+    siteIcon.innerText = letter.toUpperCase()
+
+    // set random background color
+    siteIcon.style.backgroundColor = getRandomColor()
+
+  } else {
+    siteIcon = document.createElement("img")
+    siteIcon.classList.add("popup-site-icon")
+    siteIcon.src = pageIconSrc
+  }
+  
+  const siteName = document.createElement("div")
+  siteName.classList.add("popup-site-name")
+  siteName.innerText = window.location.hostname
+  const siteBackground = document.createElement("div")
+  siteBackground.classList.add("popup-site-background")
+
+  infoContainer.appendChild(siteIcon)
+  infoContainer.appendChild(siteName)
+  infoContainer.appendChild(siteBackground)
+
+
+  const arcsContainer = document.createElement("div")
+  arcsContainer.classList.add("popup-arcs-container")
+
+  const mainScoreArcContainer = document.createElement("div")
+  mainScoreArcContainer.classList.add("popup-main-score-arc-container")
+  const mainScoreArc = createScoreArc(3, 180)
+  mainScoreArc.classList.add("popup-main-score-arc")
+
+  const mainScoreValue = document.createElement("div")
+  mainScoreValue.classList.add("popup-main-score-value")
+  mainScoreValue.innerText = "3/5"
+
+  mainScoreArcContainer.appendChild(mainScoreArc)
+  mainScoreArcContainer.appendChild(mainScoreValue)
+
+
+  const categoriesContainer = document.createElement("div")
+  categoriesContainer.classList.add("popup-categories-container")
+
+  for ([id, val] of Object.entries(categoryMap)) {
+    const categoryContainer = document.createElement("div")
+    const categoryIcon = document.createElement("div")
+    const categoryArc = createScoreArc(5, 80)
+    
+    categoryContainer.classList.add("popup-category-container")
+    categoryIcon.classList.add("popup-category-icon")
+    categoryArc.classList.add("popup-category-arc")
+
+    const url = `resources/icons/${id}.svg`
+    categoryIcon.style.backgroundImage = `url(${chrome.runtime.getURL(url)})`
+
+
+    const categoryHint = document.createElement("div")
+    categoryHint.classList.add("popup-category-hint")
+    categoryHint.setAttribute("id", `popup-category-hint-${id}`)
+    categoryHint.innerText = categoryMap[id]
+    categoryHint.style.display = "none" // initially hidden
+
+    categoryContainer.id = id
+    categoryContainer.addEventListener("mouseenter", showHint)
+    categoryContainer.addEventListener("mouseleave", hideHint)
+    categoryContainer.addEventListener("mousemove", moveHint)
+
+    categoryContainer.appendChild(categoryHint)
+    categoryContainer.appendChild(categoryIcon)
+    categoryContainer.appendChild(categoryArc)
+    categoriesContainer.appendChild(categoryContainer)
+  }
+
+  arcsContainer.appendChild(mainScoreArcContainer)
+  arcsContainer.appendChild(categoriesContainer)
+
   popupContainer.appendChild(headerContainer)
+  popupContainer.appendChild(infoContainer)
+  popupContainer.appendChild(arcsContainer)
   popupContainer.appendChild(footerContainer)
 
   // load fonts
@@ -155,7 +336,9 @@ function showPopup() {
   const poppinsMediumFontFace = new FontFace('Poppins-medium', `url(${chrome.runtime.getURL("resources/fonts/Poppins/Poppins-Medium.ttf")})`);
   poppinsMediumFontFace.load().then((loadedFont) => {
       document.fonts.add(loadedFont);
+      siteIcon.style.fontFamily = "'Poppins-medium', sans-serif"
       footerContainer.style.fontFamily = "'Poppins-medium', sans-serif"
+      arcsContainer.style.fontFamily = "'Poppins-medium', sans-serif"
   }).catch((err) => console.error("Font failed to load:", err));
   
   const montserratFontFace = new FontFace('Montserrat', `url(${chrome.runtime.getURL("resources/fonts/Montserrat/static/Montserrat-Bold.ttf")})`);
@@ -164,9 +347,7 @@ function showPopup() {
       logoName.style.fontFamily = "'Montserrat', sans-serif"
   }).catch((err) => console.error("Font failed to load:", err));
 
-  // overlay popup onto document
-  document.body.appendChild(popupContainer)
-  document.body.appendChild(reshowPopupButton)
+  
 
 
   // add styling
@@ -174,8 +355,13 @@ function showPopup() {
   style.type = "text/css"
   style.rel = "stylesheet"
   style.href = chrome.runtime.getURL("popup/styles/popup.css")
-  document.head.appendChild(style)
 
+  // overlay popup onto document
+  shadow.appendChild(popupContainer)
+  shadow.appendChild(reshowPopupButton)
+  shadow.appendChild(style)
+  document.body.appendChild(host)
+  // document.body.appendChild(reshowPopupButton)
   
 }
 
@@ -214,9 +400,11 @@ chrome.storage.local.get(["tempData"], function (data) {
         break;
       }
     }
+    match = false // to remove
     if (!match){
         setTimeout(() => {
             let found = scrape_links();
+            found = 1 // to remove
             if (found > 0){
               showPopup()
             }
