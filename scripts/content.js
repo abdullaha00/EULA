@@ -8,9 +8,21 @@ function addProfile() {
 }
 
 function addHiddenProfile() {
-  const currentHost = window.location.hostname;
+  currentHost = window.location.hostname;
+  if (currentHost.slice(0,4) === "www."){
+    currentHost = currentHost.slice(4)
+  }
   chrome.storage.local.get(["tempData"], function (data) {
-    data["tempData"][0]["hidden"].push(currentHost);
+    let loc = data.tempData[0].hidden.length
+    for (const id in data.tempData[0].hidden){
+      console.log(id, currentHost, data.tempData[0].hidden[id], currentHost.localeCompare(data.tempData[0].hidden[id]))
+      if (currentHost.localeCompare(data.tempData[0].hidden[id]) === -1){
+        loc = id;
+        break
+      };
+    } 
+    data.tempData[0].hidden.splice(loc, 0, currentHost)
+    console.log(data.tempData[0].hidden)
     chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
       closePopup()
     });
@@ -185,7 +197,11 @@ chrome.storage.local.get(["tempData"], function (data) {
     console.log(data["tempData"][0])
     const tempData = data.tempData[0] 
     let match = false
-    const currentHost = window.location.hostname;
+    let currentHost = window.location.hostname;
+    if (currentHost.slice(0,4) === "www."){
+      currentHost = currentHost.slice(4)
+    }
+    console.log(currentHost)
     for (const id in tempData.profiles){
         if (currentHost === tempData.profiles[id].hostname){
             match = true;

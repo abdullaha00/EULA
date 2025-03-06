@@ -24,3 +24,49 @@ li {
     flex-direction: column;
     align-items: center;
 }
+
+.hidden-search-bar-container {
+    text-align: center;
+    position: relative;
+  }
+  
+  .search-icon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/search.svg");
+    background-size: 15px 15px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.3;
+  }
+  
+  #hidden-search-bar {
+    border: none;
+    background-color: rgb(228, 228, 228);
+    border-radius: 100px;
+    line-height: 15px;
+    height: 40px;
+    width: 250px;
+    padding: 0 36px;
+    font-size: 18px;
+    font-family: "Poppins";
+    transition: background-color ease 0.2s;
+  }
+  
+  #hidden-search-bar:focus {
+    outline: none;
+    background-color: rgb(212, 212, 212);
+  }
+  
+  .hidden-search-bar-inner {
+    display: inline-block;
+  }
+
+.containersearch {
+    padding: 10px;
+     display: flex;
+    align-items: center; 
+    justify-content: center;
+
+}
