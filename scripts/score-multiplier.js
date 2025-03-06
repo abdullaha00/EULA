@@ -6,21 +6,12 @@
 // scoring of user preferences
 // based on the survey results, have a multiplier on the score given by the LLM
 
-// example data:
-// {
-//     "age_group": "Above 60",
-//     "content_creation": "sometimes",
-//     "litigation_concern": "not_concerned",
-//     "privacy_concern": "slightly_concerned",
-//     "security_concern": "moderately_concerned",
-//     "timestamp": "2025-03-04T11:30:24.631Z"
-// }
 export const exampleSurveyData = {
-    "age_group": "Above 60",
-    "content_creation": "sometimes",
-    "litigation_concern": "not_concerned",
+    "age_group": "40 to 60",
+    "content_creation": "Often",
+    "litigation_concern": "slightly_concerned",
     "privacy_concern": "slightly_concerned",
-    "security_concern": "moderately_concerned",
+    "security_concern": "slightly_concerned",
     "timestamp": "2025-03-04T11:30:24.631Z"
 };
 
@@ -107,21 +98,6 @@ export function score_user_preferences(surveyData, category_array) {
         category_array["Security"] *= securityMultipliers[surveyData.security_concern];
     }
     return category_array;
-}
-
-async function getSurveyResults() {
-    try {
-        const result = await chrome.storage.local.get(['surveyResults']);
-        if (result.surveyResults) {
-            const adjustedScores = score_user_preferences(result.surveyResults);
-            
-            // Save the adjusted scores to Chrome storage
-            await chrome.storage.local.set({ 'categoryScores': adjustedScores });
-            console.log('Category scores saved to Chrome storage'); // can be removed
-        }
-    } catch (error) {
-        console.error('Error retrieving survey results:', error);
-    }
 }
 
 //Usage example (for debugging)

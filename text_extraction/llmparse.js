@@ -110,7 +110,7 @@ function calculateCategoryAverageRanks(rankedResults, categories) {
     return categoryAverageRanks;
 }
 
-const categories = [
+export const categories = [
     "Grant of License",
     "Restrictions of Use",
     "Ownership & IP",
@@ -147,26 +147,43 @@ const sentences = [
 ];
 
 // Call the function and transform the output
-askLLMForAll(sentences).then(results => {
-    console.log("Original Output:");
-    console.log(results); // Original output (array of objects)
+// askLLMForAll(sentences).then(results => {
+//     console.log("Original Output:");
+//     console.log(results); // Original output (array of objects)
 
-    // Sort the results based on importanceScore (ascending order)
+//     // Sort the results based on importanceScore (ascending order)
+//     const sortedResults = results.sort((a, b) => a.importanceScore - b.importanceScore);
+
+//     // Assign ranks based on quintiles
+//     const rankedResults = assignRanks(sortedResults);
+
+//     console.log("Ranked Output:");
+//     console.log(rankedResults); // Output with ranks
+
+//     // Transform the ranked results into triples
+//     const triples = rankedResults.map(result => [result.sentence, result.category, result.importanceScore, result.rank]);
+//     console.log("Transformed Output (Triples with Ranks):");
+//     console.log(triples); // Outputs a list of triples (sentence, category, score, rank)
+
+//     // Calculate category average ranks (using the ranks already assigned)
+//     const categoryAverageRanks = calculateCategoryAverageRanks(rankedResults, categories);
+//     console.log("Category Average Ranks (1 to 5, with 0 for missing categories):");
+//     console.log(categoryAverageRanks); // Outputs a hashmap of category to average rank
+// });
+
+export async function processLLMResults(sentences, categories) {
+    const results = await askLLMForAll(sentences);
+    
+    // Your existing processing logic
     const sortedResults = results.sort((a, b) => a.importanceScore - b.importanceScore);
-
-    // Assign ranks based on quintiles
     const rankedResults = assignRanks(sortedResults);
-
-    console.log("Ranked Output:");
-    console.log(rankedResults); // Output with ranks
-
-    // Transform the ranked results into triples
     const triples = rankedResults.map(result => [result.sentence, result.category, result.importanceScore, result.rank]);
-    console.log("Transformed Output (Triples with Ranks):");
-    console.log(triples); // Outputs a list of triples (sentence, category, score, rank)
-
-    // Calculate category average ranks (using the ranks already assigned)
     const categoryAverageRanks = calculateCategoryAverageRanks(rankedResults, categories);
-    console.log("Category Average Ranks (1 to 5, with 0 for missing categories):");
-    console.log(categoryAverageRanks); // Outputs a hashmap of category to average rank
-});
+
+    return {
+        raw: results,
+        ranked: rankedResults,
+        triples,
+        categoryAverages: categoryAverageRanks
+    };
+}
