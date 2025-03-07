@@ -1,20 +1,21 @@
-import {askLLMForAll} from '../text_extraction/llmparse.js';
-import {categorizeSentences, categories, sentences} from '../text_extraction/filter.js';
+import {processLLMResults, categories} from '../text_extraction/llmparse.js';
+import {categorizeSentences, category_items, sentences} from '../text_extraction/filter.js';
 import {exampleSurveyData, example_category_array, score_user_preferences} from './score-multiplier.js';
 
 // Main analysis pipeline
-export async function analyzeEulaText(text, categories) {
+export async function analyzeEulaText(text) {
     try {
         // Parse sentence
-        const categorized = categorizeSentences(text, categories);
+        const categorized = categorizeSentences(text, category_items);
         
         // Send to LLM for analysis
-        const score_by_category = await askLLMForAll(categorized);
-        return score_by_category;
+        const results = await processLLMResults(categorized, categories);
+        //return score_by_category;
         // Send to score multiplier
-        //const final_score_by_category_array = score_user_preferences(exampleSurveyData, example_category_array);
+        const surveyData = await getSurveyData();
+        results.categoryAverages = score_user_preferences(surveyData, results.categoryAverages);
 
-        //return final_score_by_category_array;
+        return results;
     
     } catch (error) {
         console.error('Analysis failed:', error);
@@ -22,5 +23,20 @@ export async function analyzeEulaText(text, categories) {
     }
 }
 
-const test = analyzeEulaText(sentences, categories)
-console.log(test)
+async function getSurveyData() {
+    try {
+        const result = await chrome.storage.local.get(['surveyResults']);
+        return result;
+    } catch (error) {
+        //console.error('Error retrieving survey results:', error);
+        return exampleSurveyData;
+    }
+}
+
+
+// For Debugging Use 
+async function main() {
+    const test = await analyzeEulaText(sentences)
+    console.log(test)
+}
+main();
