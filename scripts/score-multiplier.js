@@ -6,7 +6,7 @@
 // scoring of user preferences
 // based on the survey results, have a multiplier on the score given by the LLM
 
-export const exampleSurveyData = {
+const exampleSurveyData = {
     "age_group": "40 to 60",
     "content_creation": "Often",
     "litigation_concern": "slightly_concerned",
@@ -16,7 +16,7 @@ export const exampleSurveyData = {
 };
 
 // Predefined categories with default multiplier of 1
-export const example_category_array = {
+const example_category_array = {
     "Grant of License": 1,
     "Restrictions of Use": 1,
     "Ownership & IP": 1,
@@ -34,7 +34,7 @@ export const example_category_array = {
     "Changes to EULA": 1,
 };
 
-export function score_user_preferences(surveyData, category_array) {
+function score_user_preferences(surveyData, category_array) {
     // Ensure a valid survey result is passed
     if (!surveyData) {
         console.error("No survey data provided");

@@ -109,6 +109,10 @@ function loadAddEula() {
         .then(data => {
             content.innerHTML = data;
         })
+        .then(() => loadScript("/text_extraction/llmparse.js"))
+        .then(() => loadScript("/text_extraction/filter.js"))
+        .then(() => loadScript("/scripts/score-multiplier.js"))
+        .then(() => loadScript("/scripts/getllmresults.js"))
         .then(() => loadScript("/scripts/analysis.js"))
 
     content.style.display = "block"

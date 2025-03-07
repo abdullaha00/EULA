@@ -1,6 +1,6 @@
 async function getLLMResponse(prompt) {
     try {
-        console.log("Sending request with prompt:", prompt);
+        //console.log("Sending request with prompt:", prompt);
         const response = await fetch("https://api.together.xyz/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -14,9 +14,9 @@ async function getLLMResponse(prompt) {
             })
         });
 
-        console.log("Response status:", response.status);
+        //console.log("Response status:", response.status);
         const data = await response.json();
-        console.log("Response data:", data);
+        //console.log("Response data:", data);
 
         if (!response.ok) {
             throw new Error(data.error?.message || "API request failed");
@@ -110,7 +110,7 @@ function calculateCategoryAverageRanks(rankedResults, categories) {
     return categoryAverageRanks;
 }
 
-export const categories = [
+const categories = [
     "Grant of License",
     "Restrictions of Use",
     "Ownership & IP",
@@ -171,8 +171,9 @@ const sentences = [
 //     console.log(categoryAverageRanks); // Outputs a hashmap of category to average rank
 // });
 
-export async function processLLMResults(sentences, categories) {
+async function processLLMResults(sentences, categories) {
     const results = await askLLMForAll(sentences);
+    console.log(results);
     
     // Your existing processing logic
     const sortedResults = results.sort((a, b) => a.importanceScore - b.importanceScore);

@@ -1,9 +1,5 @@
-import {processLLMResults, categories} from '../text_extraction/llmparse.js';
-import {categorizeSentences, category_items, sentences} from '../text_extraction/filter.js';
-import {exampleSurveyData, example_category_array, score_user_preferences} from './score-multiplier.js';
-
 // Main analysis pipeline
-export async function analyzeEulaText(text) {
+async function analyzeEulaText(text) {
     try {
         // Parse sentence
         const categorized = categorizeSentences(text, category_items);

@@ -11,10 +11,10 @@ if (submitBtn) {
 
 resultArea = document.getElementById('analysisResult');
 
-function handleAnalyseButton(text) {
+async function handleAnalyseButton(text) {
     if (resultArea) {
         // this should replace resultArea with a graph view of the analysis
-        // analysis = analyse(text);
+        customEulaAnalysis = await analyzeEulaText(text);
         // resultArea.innerHTML = visualise(analysis);
         resultArea.textContent = "EULA submitted: " + text;
         
