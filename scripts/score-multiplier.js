@@ -8,7 +8,7 @@
 
 const exampleSurveyData = {
     "age_group": "40 to 60",
-    "content_creation": "Often",
+    "content_creation": "often",
     "litigation_concern": "slightly_concerned",
     "privacy_concern": "slightly_concerned",
     "security_concern": "slightly_concerned",
@@ -35,8 +35,11 @@ const example_category_array = {
 };
 
 function score_user_preferences(surveyData, category_array) {
+    console.log(surveyData);
+    console.log(category_array);
     // Ensure a valid survey result is passed
     if (!surveyData) {
+        // console.log("Cannot read survey data!");
         console.error("No survey data provided");
         return category_array;
     }
@@ -50,11 +53,11 @@ function score_user_preferences(surveyData, category_array) {
 
     // Content creation adjustments for Ownership & IP
     const contentCreationMultipliers = {
-        "Never": 0.5,
-        "Rarely": 0.8,
-        "Sometimes": 1.0,
-        "Often": 1.2,
-        "Very Often": 1.5
+        "never": 0.5,
+        "rarely": 0.8,
+        "sometimes": 1.0,
+        "often": 1.2,
+        "very_often": 1.5
     };
     if (surveyData.content_creation in contentCreationMultipliers) {
         category_array["Ownership & IP"] *= contentCreationMultipliers[surveyData.content_creation];

@@ -16,7 +16,8 @@ async function handleAnalyseButton(text) {
         // this should replace resultArea with a graph view of the analysis
         customEulaAnalysis = await analyzeEulaText(text);
         // resultArea.innerHTML = visualise(analysis);
-        resultArea.textContent = "EULA submitted: " + text;
+        // resultArea.textContent = "EULA submitted: " + text;
+        resultArea.textContent = "EULA submitted: " + JSON.stringify(customEulaAnalysis);
         
         // add objects necessary to save analysis
         var centerDiv = document.createElement('div');

@@ -5,7 +5,7 @@ async function getLLMResponse(prompt) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer d9a96b122fbb7c131ba05a0f3c67ffda5eba4f2db58f6e5c5edff31d887550c1"
+                "Authorization": "Bearer ef9b9a575e205f70254b76599c69aa5b4499d5815ed200f6e8fdec2f0af83d6b"
             },
             body: JSON.stringify({
                 model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -34,7 +34,7 @@ async function getLLMResponse(prompt) {
 }
 
 async function askLLMForAll(sentences) {
-    console.log("Processing sentences...");
+    console.log("Processing sentences...", sentences);
     const results = [];
     for (let i = 0; i < sentences.length; i++) {
         // Get the category for the sentence
@@ -172,7 +172,9 @@ const sentences = [
 // });
 
 async function processLLMResults(sentences, categories) {
+    console.log("calling LLM...");
     const results = await askLLMForAll(sentences);
+    console.log("results obtained!");
     console.log(results);
     
     // Your existing processing logic
