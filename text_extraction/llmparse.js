@@ -36,7 +36,13 @@ async function getLLMResponse(prompt) {
 async function askLLMForAll(sentences) {
     console.log("Processing sentences...", sentences);
     const results = [];
+    
+    const total = sentences.length;
+
     for (let i = 0; i < sentences.length; i++) {
+        // Update progress indicator before processing each sentence
+        updateProgress(i + 1, total);
+
         // Get the category for the sentence
         const categoryPrompt = `Answer with only one category - sort the following sentence into one of these categories: ${categories.join(", ")}; '${sentences[i]}'`;
         const categoryResponse = await getLLMResponse(categoryPrompt);

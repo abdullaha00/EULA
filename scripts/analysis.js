@@ -9,6 +9,20 @@ if (submitBtn) {
     }
 }
 
+// Create or get a progress element from the DOM
+let progressElement = document.getElementById('progressIndicator');
+if (!progressElement) {
+    progressElement = document.createElement('div');
+    progressElement.id = 'progressIndicator';
+    // Append it to your result area or another container
+    document.body.appendChild(progressElement);
+}
+
+// Function to update the progress indicator
+function updateProgress(current, total) {
+    progressElement.textContent = `Some sentences may have been filtered out. Processing sentence ${current} of ${total}`;
+}
+
 resultArea = document.getElementById('analysisResult');
 
 async function handleAnalyseButton(text) {
