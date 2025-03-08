@@ -334,7 +334,8 @@ body {
 
 .survey-container h1 {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
     color: #2c3e50;
     font-size: 2rem;
 }
@@ -403,4 +404,68 @@ body {
 
 .submit-btn:hover {
     background-color: #2980b9;
+}
+
+.survey-description {
+    color: #667;
+    font-size: 0.9em;
+    line-height: 1.6;
+    margin: 0 auto 2rem;
+    max-width: 600px;
+    text-align: center;
+    padding: 0 1rem;
+    font-weight: 400;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.info-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    cursor: help;
+    position: relative;
+}
+
+.info-icon svg {
+    fill: #666;
+    transition: fill 0.2s ease;
+}
+
+.info-icon:hover svg {
+    fill: #2196F3;
+}
+
+.tooltip {
+    position: absolute;
+    background: #fff;
+    color: #668;
+    padding: 12px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 250px;
+    z-index: 1000;
+    font-size: 0.7em;
+    line-height: 1.4;
+    opacity: 0.7;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    transform: translateY(10px);
+}
+
+.tooltip.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 10px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent #fff transparent;
 }
