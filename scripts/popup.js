@@ -62,6 +62,15 @@
 //         .then(() => loadScript("/scripts/websites.js"))
 // });
 
+const pages = {
+    home: 1,
+    add: 2,
+    hidden: 3,
+}
+
+let currentPage = pages.home
+let apps
+
 function loadScript(src) {
     var script = document.createElement('script');
     script.src = src;
@@ -79,11 +88,13 @@ function hidePanel() {
 }
 
 function loadHome() {
-    hidePanel()
+    if (currentPage != pages.home) {
+        hidePanel()
 
-    // make home content visible
-    const homeContent = document.getElementById("home-content")
-    homeContent.style.display = "block"
+        // make home content visible
+        const homeContent = document.getElementById("home-content")
+        homeContent.style.display = "block"
+    }
 }
 
 function hideHome() {
@@ -100,22 +111,26 @@ function clearHome() {
 }
 
 function loadAddEula() {
-    hideHome()
-    hidePanel()
+    console.log(currentPage);
     
-    const content = document.getElementById("panel-content")
-    fetch("/popup/pages/add.html")
-        .then(response => response.text())
-        .then(data => {
-            content.innerHTML = data;
-        })
-        .then(() => loadScript("/text_extraction/llmparse.js"))
-        .then(() => loadScript("/text_extraction/filter.js"))
-        .then(() => loadScript("/scripts/score-multiplier.js"))
-        .then(() => loadScript("/scripts/getllmresults.js"))
-        .then(() => loadScript("/scripts/analysis.js"))
-
-    content.style.display = "block"
+    if (currentPage != pages.add) {
+        hideHome()
+        hidePanel()
+        
+        const content = document.getElementById("panel-content")
+        fetch("/popup/pages/add.html")
+            .then(response => response.text())
+            .then(data => {
+                content.innerHTML = data;
+            })
+            .then(() => loadScript("/text_extraction/llmparse.js"))
+            .then(() => loadScript("/text_extraction/filter.js"))
+            .then(() => loadScript("/scripts/score-multiplier.js"))
+            .then(() => loadScript("/scripts/getllmresults.js"))
+            .then(() => loadScript("/scripts/analysis.js"))
+    
+        content.style.display = "block"
+    }
 }
 
 function highlight(){
@@ -125,23 +140,26 @@ function highlight(){
 }
 
 function loadHiddenSites(){
-    hideHome()
-    hidePanel()
+    if (currentPage != pages.hidden) {
+        hideHome()
+        hidePanel()
+        
+        const content = document.getElementById("panel-content")
+        fetch("/popup/pages/hidden.html")
+            .then(response => response.text())
+            .then(data => {
+                content.innerHTML = data;
+            })
+            .then(() => loadScript("/scripts/hiddenSites.js"))
     
-    const content = document.getElementById("panel-content")
-    fetch("/popup/pages/hidden.html")
-        .then(response => response.text())
-        .then(data => {
-            content.innerHTML = data;
-        })
-        .then(() => loadScript("/scripts/hiddenSites.js"))
-
-    content.style.display = "block"
+        content.style.display = "block"
+    }
 }
 
 function initHome(data) {
 
     let container = document.getElementById("all-app-container")
+    container.classList.add("all-app-container")
 
     for (const [id, value] of Object.entries(data.profiles)) {
         const newAppContainer = document.createElement("div")
@@ -345,8 +363,9 @@ chrome.storage.local.get("tempData", function (data) {
 
 
 
-let apps
-document.getElementById("home").addEventListener("click", loadHome)
-document.getElementById("add-eula").addEventListener("click", loadAddEula)
+document.getElementById("home").addEventListener("click", () => {loadHome(); currentPage=pages.home})
+document.getElementById("add-eula").addEventListener("click", () => {loadAddEula(); currentPage = pages.add})
+document.getElementById("hidden-sites").addEventListener("click", () => {loadHiddenSites(); currentPage = pages.hidden})
+
+
 document.getElementById("highlight").addEventListener("click", highlight)
-document.getElementById("hidden-sites").addEventListener("click", loadHiddenSites)
