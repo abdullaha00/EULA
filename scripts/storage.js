@@ -146,7 +146,8 @@ let tempData = {
         }
 
     }, 
-    hidden : []
+    hidden : [],
+    popup_on : true
 }
 
 // COMMENT THIS OUT LATER

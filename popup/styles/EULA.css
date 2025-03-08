@@ -81,6 +81,9 @@ body {
 #hidden-sites {
   background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/hidden.svg");
 }
+#settings {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/resources/extension-icons/settings.svg");
+}
 #graph {
   background-image: url("chrome-extension://__MSG_@@extension_id__/resources/EULA.png");
 }

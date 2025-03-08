@@ -378,33 +378,35 @@ function scrape_links(){
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
-    console.log(data["tempData"][0])
-    const tempData = data.tempData[0] 
-    let match = false
-    let currentHost = window.location.hostname;
-    if (currentHost.slice(0,4) === "www."){
-      currentHost = currentHost.slice(4)
-    }
-    console.log(currentHost)
-    for (const id in tempData.profiles){
-        if (currentHost === tempData.profiles[id].hostname){
-            match = true;
-            break;
-        }
-    }
-    for (const host of tempData.hidden){
-      if (currentHost === host){
-        match = true;
-        break;
+    if(data.tempData[0].popup_on){
+      console.log(data["tempData"][0])
+      const tempData = data.tempData[0] 
+      let match = false
+      let currentHost = window.location.hostname;
+      if (currentHost.slice(0,4) === "www."){
+        currentHost = currentHost.slice(4)
       }
-    }
-    if (!match){
-        setTimeout(() => {
-            let found = scrape_links();
-            if (found > 0){
-              showPopup()
-            }
-            
-        }, 1000);
-    }
-;});
+      console.log(currentHost)
+      for (const id in tempData.profiles){
+          if (currentHost === tempData.profiles[id].hostname){
+              match = true;
+              break;
+          }
+      }
+      for (const host of tempData.hidden){
+        if (currentHost === host){
+          match = true;
+          break;
+        }
+      }
+      if (!match){
+          setTimeout(() => {
+              let found = scrape_links();
+              if (found > 0){
+                showPopup()
+              }
+              
+          }, 1000);
+      };
+      }
+    });
