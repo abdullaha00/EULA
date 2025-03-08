@@ -1,6 +1,6 @@
 async function getLLMResponse(prompt) {
     try {
-        console.log("Sending request with prompt:", prompt);
+        //console.log("Sending request with prompt:", prompt);
         const response = await fetch("https://api.together.xyz/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -14,9 +14,9 @@ async function getLLMResponse(prompt) {
             })
         });
 
-        console.log("Response status:", response.status);
+        //console.log("Response status:", response.status);
         const data = await response.json();
-        console.log("Response data:", data);
+        //console.log("Response data:", data);
 
         if (!response.ok) {
             throw new Error(data.error?.message || "API request failed");
@@ -34,9 +34,15 @@ async function getLLMResponse(prompt) {
 }
 
 async function askLLMForAll(sentences) {
-    console.log("Processing sentences...");
+    console.log("Processing sentences...", sentences);
     const results = [];
+    
+    const total = sentences.length;
+
     for (let i = 0; i < sentences.length; i++) {
+        // Update progress indicator before processing each sentence
+        updateProgress(i + 1, total);
+
         // Get the category for the sentence
         const categoryPrompt = `Answer with only one category - sort the following sentence into one of these categories: ${categories.join(", ")}; '${sentences[i]}'`;
         const categoryResponse = await getLLMResponse(categoryPrompt);
@@ -110,7 +116,7 @@ function calculateCategoryAverageRanks(rankedResults, categories) {
     return categoryAverageRanks;
 }
 
-export const categories = [
+const categories = [
     "Grant of License",
     "Restrictions of Use",
     "Ownership & IP",
@@ -171,8 +177,11 @@ const sentences = [
 //     console.log(categoryAverageRanks); // Outputs a hashmap of category to average rank
 // });
 
-export async function processLLMResults(sentences, categories) {
+async function processLLMResults(sentences, categories) {
+    console.log("calling LLM...");
     const results = await askLLMForAll(sentences);
+    console.log("results obtained!");
+    console.log(results);
     
     // Your existing processing logic
     const sortedResults = results.sort((a, b) => a.importanceScore - b.importanceScore);

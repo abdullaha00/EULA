@@ -70,3 +70,41 @@ li {
     justify-content: center;
 
 }
+
+.all-app-container {
+  height: 320px;
+  overflow: auto;
+  scrollbar-width: none;
+  position: relative;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.app {
+  background-color: whitesmoke;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  display: inline-block;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.274);
+  cursor: pointer;
+  transition: filter 0.2s ease;
+  background-position: center;
+  background-size: 80px;
+  background-repeat: no-repeat;
+}
+
+.app:hover {
+  filter: brightness(0.8)
+}
+
+.app-container {
+  display: inline-block;
+  margin: 10px;
+}
+
+.app-name {
+  color: gray;
+  margin-top: 5px;
+}

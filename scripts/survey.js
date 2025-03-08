@@ -28,3 +28,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+document.querySelectorAll('.info-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const tooltip = icon.querySelector('.tooltip');
+        tooltip.classList.toggle('active');
+    });
+});
+
+// Close tooltips when clicking outside
+document.addEventListener('click', () => {
+    document.querySelectorAll('.tooltip').forEach(tooltip => {
+        tooltip.classList.remove('active');
+    });
+});
+
+// Close tooltips on ESC press
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            tooltip.classList.remove('active');
+        });
+    }
+});

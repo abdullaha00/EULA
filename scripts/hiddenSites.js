@@ -1,20 +1,28 @@
 function setHosts(arr){
-    site_list = document.getElementById("site-list")
-    site_list.innerHTML = '';
+    
+    const container = document.getElementById("hidden-all-app-container")
+    console.log(container);
+    
+
     for (const host of arr){
-        const newListItem = document.createElement("li");
-        const newButton = document.createElement("button");
-        newButton.innerHTML = "&times;";
-        newButton.id = host;
-        newButton.classList.add("remove-btn");
-        if (host.length > 25){
-            newListItem.textContent = host.slice(0,25).concat("...");
-        }else{
-            newListItem.textContent = host;
-        }
-        newListItem.title = host
-        newListItem.appendChild(newButton);
-        document.getElementById("site-list").appendChild(newListItem);
+        
+        const newAppContainer = document.createElement("div")
+        const newApp = document.createElement("div")
+        const newAppName = document.createElement("div")
+
+        newAppContainer.classList.add("app-container")
+        newApp.classList.add("app")
+
+        newApp.style.backgroundColor = "red"
+
+        newAppName.classList.add("app-name")
+
+        newAppName.innerText = "test"
+        
+        newAppContainer.appendChild(newApp)
+        newAppContainer.appendChild(newAppName)
+
+        container.appendChild(newAppContainer)
     }
 }
 

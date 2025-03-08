@@ -1,23 +1,27 @@
-import {processLLMResults, categories} from '../text_extraction/llmparse.js';
-import {categorizeSentences, category_items, sentences} from '../text_extraction/filter.js';
-import {exampleSurveyData, example_category_array, score_user_preferences} from './score-multiplier.js';
-
 // Main analysis pipeline
-export async function analyzeEulaText(text) {
+async function analyzeEulaText(text) {
     try {
+        text = splitTextIntoSentences(text);
         // Parse sentence
+        console.log("text:", text);
         const categorized = categorizeSentences(text, category_items);
-        
+        console.log("Categorized sentences:", categorized);
         // Send to LLM for analysis
         const results = await processLLMResults(categorized, categories);
-        //return score_by_category;
+        console.log("results parsed!")
+        console.log(results);
+
         // Send to score multiplier
         const surveyData = await getSurveyData();
-        results.categoryAverages = score_user_preferences(surveyData, results.categoryAverages);
-
+        // console.log("survey data!");
+        // console.log(surveyData);
+        results.categoryAverages = score_user_preferences(surveyData, results.categoryAverages); 
+       
+        console.log(results)
         return results;
     
     } catch (error) {
+        console.log("catch error...")
         console.error('Analysis failed:', error);
         throw error;
     }
@@ -26,17 +30,17 @@ export async function analyzeEulaText(text) {
 async function getSurveyData() {
     try {
         const result = await chrome.storage.local.get(['surveyResults']);
-        return result;
+        return result.surveyResults || exampleSurveyData;
     } catch (error) {
-        //console.error('Error retrieving survey results:', error);
+        console.error('Error with Chrome storage', error);
         return exampleSurveyData;
     }
 }
 
 
 // For Debugging Use 
-async function main() {
-    const test = await analyzeEulaText(sentences)
-    console.log(test)
-}
-main();
+// async function main() {
+//     const test = await analyzeEulaText(debug_sentences)
+//     console.log(test)
+// }
+// main();
