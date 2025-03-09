@@ -4,6 +4,8 @@ const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 let initHidden
 
+let uniqueLinks = []; //store unique links to use in showPopup()
+
 const categoryMap = {
   1  : "Grant of License",
   2  : "Restrictions of Use",
@@ -286,12 +288,12 @@ function showPopup() {
 
   const mainScoreArcContainer = document.createElement("div")
   mainScoreArcContainer.classList.add("popup-main-score-arc-container")
-  const mainScoreArc = createScoreArc(3, 180)
+  const mainScoreArc = createScoreArc(0, 180)
   mainScoreArc.classList.add("popup-main-score-arc")
 
   const mainScoreValue = document.createElement("div")
   mainScoreValue.classList.add("popup-main-score-value")
-  mainScoreValue.innerText = "3/5"
+  mainScoreValue.innerText = "0/5"
 
   mainScoreArcContainer.appendChild(mainScoreArc)
   mainScoreArcContainer.appendChild(mainScoreValue)
@@ -303,7 +305,7 @@ function showPopup() {
   for ([id, val] of Object.entries(categoryMap)) {
     const categoryContainer = document.createElement("div")
     const categoryIcon = document.createElement("div")
-    const categoryArc = createScoreArc(5, 80)
+    const categoryArc = createScoreArc(0, 80)
     
     categoryContainer.classList.add("popup-category-container")
     categoryIcon.classList.add("popup-category-icon")
@@ -328,6 +330,7 @@ function showPopup() {
     categoryContainer.appendChild(categoryIcon)
     categoryContainer.appendChild(categoryArc)
     categoriesContainer.appendChild(categoryContainer)
+
   }
 
   arcsContainer.appendChild(mainScoreArcContainer)
@@ -374,9 +377,39 @@ function showPopup() {
 
   shadow.appendChild(popupContainer)
   shadow.appendChild(reshowPopupButton)
-  document.body.appendChild(host)
+  document.body.appendChild(host);
   // document.body.appendChild(reshowPopupButton)
+
   
+  //// update using parsed version of first element in fetchedResults for now
+  
+  fetch(base.concat(encodeURIComponent(encodeURIComponent(uniqueLinks[0])))) // TODO: parse and update more than just link1 and update dynamically
+    .then(res => res.json())
+    .then(data => {
+      
+        analyzeEulaText(data.texts.join(" ")).then(data => {
+        //analyzeEulaText(" ").then(data => {
+
+        const vals = Object.values(data.categoryAverages);
+        const sum = vals.reduce((acc, val) => acc + val, 0);
+        const avg = sum / vals.length; // replace main arc with sum
+
+        const svg = d3.select(mainScoreArc);
+        const height = +svg.attr('height');  
+        svg.select("g").select("path:nth-child(2)") 
+        .datum({ endAngle: 2 * Math.PI * 5 / 5 })  
+        .style("fill", "#63E6BE") 
+        .attr("d", d3.arc() 
+            .innerRadius(height / 2 * 0.75)
+            .outerRadius(height / 2)
+            .startAngle(0)
+            .endAngle(2 * Math.PI * 5 / 5)
+        ); // fill out circle to maximum for now
+        
+        mainScoreValue.innerText = `${Math.floor(sum)}/5`; //replace main arc text
+
+      });
+    })
 }
 
 function scrape_links(){
@@ -384,18 +417,20 @@ function scrape_links(){
     .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
     .map(a => a.href);
 
-    const unique_links = [...new Set(relevant_links)];
-    unique_links.forEach(link => {
+    uniqueLinks = [...new Set(relevant_links)];
+    uniqueLinks.forEach(link => {
         fetch(base.concat(encodeURIComponent(encodeURIComponent(link))))
         .then(res => res.json())
-        .then(console.log)
+        .then(data => {
+          console.log(data);
+    })
     });
-    return unique_links.length
+    return uniqueLinks.length
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
     console.log(data["tempData"][0])
-    const tempData = data.tempData[0] 
+    const tempData = data.tempData[0]
     let match = false
     let currentHost = window.location.hostname;
     // if (currentHost.slice(0,4) === "www."){
