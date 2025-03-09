@@ -1,5 +1,9 @@
 // automatic popup script
 
+chrome.storage.local.get(["tempData"], function (data) {
+  console.log("all data:", data.tempData[0])
+});
+
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
 let initHidden
@@ -80,6 +84,7 @@ function addHiddenProfile() {
   chrome.storage.local.get(["tempData"], function (data) {
     let newData = data.tempData[0]
     let newHidden = newData.hidden
+    console.log(newHidden);
     
     let hasIcon = true
     let icon = getPageIcon()
@@ -97,11 +102,16 @@ function addHiddenProfile() {
 
     newHidden[currentHost] = entry
     newData.hidden = newHidden
+    console.log(newData.hidden);
+    console.log("coming soon:", newData)
 
     chrome.storage.local.set({"tempData" : [newData]}).then(() => {
       closePopup()
     });
   });
+  setTimeout(() => {chrome.storage.local.get(["tempData"], function (data) { console.log("new!!", data.tempData[0])})
+}, 1000);
+
 }
 
 
@@ -429,13 +439,11 @@ function scrape_links(){
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
+  if(data.tempData[0].popup_on){
     console.log(data["tempData"][0])
-    const tempData = data.tempData[0]
+    const tempData = data.tempData[0] 
     let match = false
     let currentHost = window.location.hostname;
-    // if (currentHost.slice(0,4) === "www."){
-    //   currentHost = currentHost.slice(4)
-    // }
     console.log(currentHost)
     for (const id in tempData.profiles){
         if (currentHost === tempData.profiles[id].hostname){
@@ -443,16 +451,17 @@ chrome.storage.local.get(["tempData"], function (data) {
             break;
         }
     }
+    console.log("go", tempData.hidden, Object.keys(tempData.hidden), Object.keys(tempData.hidden).length);
+      for (const host of Object.keys(tempData.hidden)){
+        console.log("hcts ....", host)
+        if (currentHost === host){
+          console.log("match!")
+          match = true;
+          break;
+        }
+      }
     
-    if (tempData.hidden[currentHost]) {
-      match = true
-      
-    }
-    // for (const host of tempData.hidden){
-    //   if (currentHost === host){
-    //     match = true;
-    //     break;
-    //   }
+
     if (!match){
         setTimeout(() => {
             let found = scrape_links();
@@ -461,5 +470,6 @@ chrome.storage.local.get(["tempData"], function (data) {
             }
             
         }, 1000);
+    };
     }
-;});
+  });

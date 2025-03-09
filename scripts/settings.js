@@ -1,7 +1,7 @@
 emptyData = {
     id : 0,
     profiles : {}, 
-    hidden : [],
+    hidden : {},
     popup_on : true
 }
 
