@@ -1,9 +1,9 @@
 function setHosts(hosts){
     
     const container = document.getElementById("hidden-all-app-container")
-    console.log(container);
+    console.log("container:", container);
     
-    console.log(hosts);
+    console.log("hosts:", hosts);
     
     for (const [id, v] of Object.entries(hosts)){
         
