@@ -2,6 +2,7 @@
 
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
+let initHidden
 
 const categoryMap = {
   1  : "Grant of License",
@@ -40,6 +41,8 @@ function getRandomColor() {
   return colors[keys[ keys.length * Math.random() << 0]];
 }
 
+const color = getRandomColor()
+
 
 function getPageIcon() {
 
@@ -71,19 +74,29 @@ function addProfile() {
 
 function addHiddenProfile() {
   currentHost = window.location.hostname;
-  if (currentHost.slice(0,4) === "www."){
-    currentHost = currentHost.slice(4)
-  }
+
   chrome.storage.local.get(["tempData"], function (data) {
-    let loc = data.tempData[0].hidden.length
-    for (const id in data.tempData[0].hidden){
-      if (currentHost.localeCompare(data.tempData[0].hidden[id]) === -1){
-        loc = id;
-        break
-      };
-    } 
-    data.tempData[0].hidden.splice(loc, 0, currentHost)
-    chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
+    let newData = data.tempData[0]
+    let newHidden = newData.hidden
+    
+    let hasIcon = true
+    let icon = getPageIcon()
+
+    if (!icon) {
+      hasIcon = false
+      icon = color
+    }
+
+    const entry = {
+      hasLogo: hasIcon,
+      logo: icon
+    }
+
+
+    newHidden[currentHost] = entry
+    newData.hidden = newHidden
+
+    chrome.storage.local.set({"tempData" : [newData]}).then(() => {
       closePopup()
     });
   });
@@ -164,6 +177,7 @@ function showPopup() {
 
   const host = document.createElement("span")
   host.setAttribute("id", "popup-host")
+  host.style.all = "initial" // prevent webpage styling affecting us
   const shadow = host.attachShadow({mode: "open"})
 
   const reshowPopupButton = document.createElement("div")
@@ -248,7 +262,7 @@ function showPopup() {
     siteIcon.innerText = letter.toUpperCase()
 
     // set random background color
-    siteIcon.style.backgroundColor = getRandomColor()
+    siteIcon.style.backgroundColor = color
 
   } else {
     siteIcon = document.createElement("img")
@@ -355,9 +369,11 @@ function showPopup() {
   style.href = chrome.runtime.getURL("popup/styles/popup.css")
 
   // overlay popup onto document
+
+  shadow.appendChild(style)
+
   shadow.appendChild(popupContainer)
   shadow.appendChild(reshowPopupButton)
-  shadow.appendChild(style)
   document.body.appendChild(host)
   // document.body.appendChild(reshowPopupButton)
   
@@ -378,35 +394,37 @@ function scrape_links(){
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
-    if(data.tempData[0].popup_on){
-      console.log(data["tempData"][0])
-      const tempData = data.tempData[0] 
-      let match = false
-      let currentHost = window.location.hostname;
-      if (currentHost.slice(0,4) === "www."){
-        currentHost = currentHost.slice(4)
-      }
-      console.log(currentHost)
-      for (const id in tempData.profiles){
-          if (currentHost === tempData.profiles[id].hostname){
-              match = true;
-              break;
-          }
-      }
-      for (const host of tempData.hidden){
-        if (currentHost === host){
-          match = true;
-          break;
+    console.log(data["tempData"][0])
+    const tempData = data.tempData[0] 
+    let match = false
+    let currentHost = window.location.hostname;
+    // if (currentHost.slice(0,4) === "www."){
+    //   currentHost = currentHost.slice(4)
+    // }
+    console.log(currentHost)
+    for (const id in tempData.profiles){
+        if (currentHost === tempData.profiles[id].hostname){
+            match = true;
+            break;
         }
-      }
-      if (!match){
-          setTimeout(() => {
-              let found = scrape_links();
-              if (found > 0){
-                showPopup()
-              }
-              
-          }, 1000);
-      };
-      }
-    });
+    }
+    
+    if (tempData.hidden[currentHost]) {
+      match = true
+      
+    }
+    // for (const host of tempData.hidden){
+    //   if (currentHost === host){
+    //     match = true;
+    //     break;
+    //   }
+    if (!match){
+        setTimeout(() => {
+            let found = scrape_links();
+            if (found > 0){
+              showPopup()
+            }
+            
+        }, 1000);
+    }
+;});

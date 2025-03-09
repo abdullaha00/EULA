@@ -146,15 +146,14 @@ let tempData = {
         }
 
     }, 
-    hidden : [],
-    popup_on : true
+    hidden : {}
 }
 
 
 // keep this for now so everyone has a valid tempData
-chrome.storage.local.set({"tempData" : [tempData]}, function() {
-    return true
-})
+// chrome.storage.local.set({"tempData" : [tempData]}, function() {
+//     return true
+// })
 
 // // COMMENT THIS OUT LATER
 // chrome.storage.local.get(["tempData"], function(data) {
