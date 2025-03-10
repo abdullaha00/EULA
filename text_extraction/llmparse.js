@@ -5,7 +5,7 @@ async function getLLMResponse(prompt) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer d9a96b122fbb7c131ba05a0f3c67ffda5eba4f2db58f6e5c5edff31d887550c1"
+                "Authorization": "Bearer d99a344fb58022c8c849da36e6faf754ec6ee6abf231f78e0155825c34261518"
             },
             body: JSON.stringify({
                 model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -149,9 +149,7 @@ const sentences = [
 // Call the function and transform the output
 askLLMForAll(sentences).then(results => {
     console.log("Original Output:");
-    console.log(results); // Original output (array of objects)
-
-    // Sort the results based on importanceScore (ascending order)
+    console.log(results); // Original output (array of objects    // Sort the results based on importanceScore (ascending order)
     const sortedResults = results.sort((a, b) => a.importanceScore - b.importanceScore);
 
     // Assign ranks based on quintiles
