@@ -185,6 +185,8 @@ function moveHint(e) {
   categoryHint.style.transform = `translateX(${e.clientX-rect.left}px) translateY(${e.clientY - rect.top}px)`
 }
 
+
+
 function showPopup() {
 
   const host = document.createElement("span")
@@ -198,6 +200,12 @@ function showPopup() {
   reshowPopupButton.addEventListener("click", () => {popupContainer.style.display = "block"; reshowPopupButton.style.display = "none"})
   reshowPopupButton.style.display = "none" // hide for now
 
+  const loadingButton = document.createElement("div")
+  loadingButton.setAttribute("id", "reshow-popup-button")
+  loadingButton.style.backgroundImage = `url(${chrome.runtime.getURL("resources/extension-icons/ring-resize.svg")})`
+  loadingButton.addEventListener("click", () => {popupContainer.style.display = "block"; reshowPopupButton.style.display = "none"})
+  //loadingButton.style.display = "none" // hide for now
+  
 
   const popupContainer = document.createElement("div")
   popupContainer.setAttribute("id", "popup-container")
@@ -305,43 +313,11 @@ function showPopup() {
   mainScoreValue.classList.add("popup-main-score-value")
   mainScoreValue.innerText = "0/5"
 
-  mainScoreArcContainer.appendChild(mainScoreArc)
-  mainScoreArcContainer.appendChild(mainScoreValue)
 
 
   const categoriesContainer = document.createElement("div")
   categoriesContainer.classList.add("popup-categories-container")
 
-  for ([id, val] of Object.entries(categoryMap)) {
-    const categoryContainer = document.createElement("div")
-    const categoryIcon = document.createElement("div")
-    const categoryArc = createScoreArc(0, 80)
-    
-    categoryContainer.classList.add("popup-category-container")
-    categoryIcon.classList.add("popup-category-icon")
-    categoryArc.classList.add("popup-category-arc")
-
-    const url = `resources/icons/${id}.svg`
-    categoryIcon.style.backgroundImage = `url(${chrome.runtime.getURL(url)})`
-
-
-    const categoryHint = document.createElement("div")
-    categoryHint.classList.add("popup-category-hint")
-    categoryHint.setAttribute("id", `popup-category-hint-${id}`)
-    categoryHint.innerText = categoryMap[id]
-    categoryHint.style.display = "none" // initially hidden
-
-    categoryContainer.id = id
-    categoryContainer.addEventListener("mouseenter", showHint)
-    categoryContainer.addEventListener("mouseleave", hideHint)
-    categoryContainer.addEventListener("mousemove", moveHint)
-
-    categoryContainer.appendChild(categoryHint)
-    categoryContainer.appendChild(categoryIcon)
-    categoryContainer.appendChild(categoryArc)
-    categoriesContainer.appendChild(categoryContainer)
-
-  }
 
   arcsContainer.appendChild(mainScoreArcContainer)
   arcsContainer.appendChild(categoriesContainer)
@@ -387,36 +363,89 @@ function showPopup() {
 
   shadow.appendChild(popupContainer)
   shadow.appendChild(reshowPopupButton)
+  shadow.appendChild(loadingButton)
+
   document.body.appendChild(host);
   // document.body.appendChild(reshowPopupButton)
 
-  
+  popupContainer.style.display = "none";
+
   //// update using parsed version of first element in fetchedResults for now
   
   fetch(base.concat(encodeURIComponent(encodeURIComponent(uniqueLinks[0])))) // TODO: parse and update more than just link1 and update dynamically
     .then(res => res.json())
     .then(data => {
-      
-        analyzeEulaText(data.texts.join(" ")).then(data => {
-        //analyzeEulaText(" ").then(data => {
 
+        //analyzeEulaText(data.texts.join(" ")).then(data => {
+        analyzeEulaText(" ").then(data => {
+        //   data={
+        //     "raw": [],
+        //     "ranked": [],
+        //     "triples": [],
+        //     "categoryAverages": {
+        //         "Grant of License": 1,
+        //         "Restrictions of Use": 2,
+        //         "Ownership & IP": 3,
+        //         "User responsibilities": 4,
+        //         "Privacy & Data": 5,
+        //         "Security": 1,
+        //         "Third-party Services": 2,
+        //         "Fees and Payments": 0,
+        //         "Updates and Modifications": 3,
+        //         "Support and Maintenance": 4,
+        //         "Warranties": 0,
+        //         "Liability": 1,
+        //         "Dispute Resolution": 5,
+        //         "Governing Law": 2,
+        //         "Changes to EULA": 3
+        //     }
+        // }
+        loadingButton.style.display = "none" 
+        popupContainer.style.display = "";
+
+        mainScoreArcContainer.appendChild(mainScoreArc)
+        mainScoreArcContainer.appendChild(mainScoreValue)
+      
+        const valuesArray = Object.values(data.categoryAverages);
+
+
+        for ([id, val] of Object.entries(categoryMap)) {
+          const categoryContainer = document.createElement("div")
+          const categoryIcon = document.createElement("div")
+          const categoryArc = createScoreArc(valuesArray[id-1], 80)
+          
+          categoryContainer.classList.add("popup-category-container")
+          categoryIcon.classList.add("popup-category-icon")
+          categoryArc.classList.add("popup-category-arc")
+
+          const url = `resources/icons/${id}.svg`
+          categoryIcon.style.backgroundImage = `url(${chrome.runtime.getURL(url)})`
+
+
+          const categoryHint = document.createElement("div")
+          categoryHint.classList.add("popup-category-hint")
+          categoryHint.setAttribute("id", `popup-category-hint-${id}`)
+          categoryHint.innerText = categoryMap[id]
+          categoryHint.style.display = "none" // initially hidden
+
+          categoryContainer.id = id
+          categoryContainer.addEventListener("mouseenter", showHint)
+          categoryContainer.addEventListener("mouseleave", hideHint)
+          categoryContainer.addEventListener("mousemove", moveHint)
+
+          categoryContainer.appendChild(categoryHint)
+          categoryContainer.appendChild(categoryIcon)
+          categoryContainer.appendChild(categoryArc)
+          categoriesContainer.appendChild(categoryContainer)
+
+        }
         const vals = Object.values(data.categoryAverages);
         const sum = vals.reduce((acc, val) => acc + val, 0);
         const avg = sum / vals.length; // replace main arc with sum
-
-        const svg = d3.select(mainScoreArc);
-        const height = +svg.attr('height');  
-        svg.select("g").select("path:nth-child(2)") 
-        .datum({ endAngle: 2 * Math.PI * 5 / 5 })  
-        .style("fill", "#63E6BE") 
-        .attr("d", d3.arc() 
-            .innerRadius(height / 2 * 0.75)
-            .outerRadius(height / 2)
-            .startAngle(0)
-            .endAngle(2 * Math.PI * 5 / 5)
-        ); // fill out circle to maximum for now
         
-        mainScoreValue.innerText = `${Math.floor(sum)}/5`; //replace main arc text
+        mainScoreValue.innerText = `${Math.floor(sum)}/150`; //replace main arc text
+
+    
 
       });
     })
