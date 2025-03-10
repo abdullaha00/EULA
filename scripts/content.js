@@ -407,6 +407,10 @@ function showPopup() {
         // }
         loadingButton.style.display = "none" 
         popupContainer.style.display = "";
+        //analyzeEulaText(" ").then(data => {
+        console.log("this is the data")
+          console.log(data);
+        
 
         const vals = Object.values(data.categoryAverages);
         const sum = vals.reduce((acc, val) => acc + val, 0);
