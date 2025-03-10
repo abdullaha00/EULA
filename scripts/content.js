@@ -376,8 +376,8 @@ function showPopup() {
     .then(res => res.json())
     .then(data => {
 
-        //analyzeEulaText(data.texts.join(" ")).then(data => {
-        analyzeEulaText(" ").then(data => {
+        analyzeEulaText(data.texts.join(" ")).then(data => {
+        //analyzeEulaText(" ").then(data => {
         //   data={
         //     "raw": [],
         //     "ranked": [],
