@@ -306,12 +306,8 @@ function showPopup() {
 
   const mainScoreArcContainer = document.createElement("div")
   mainScoreArcContainer.classList.add("popup-main-score-arc-container")
-  const mainScoreArc = createScoreArc(0, 180)
-  mainScoreArc.classList.add("popup-main-score-arc")
 
-  const mainScoreValue = document.createElement("div")
-  mainScoreValue.classList.add("popup-main-score-value")
-  mainScoreValue.innerText = "0/5"
+
 
 
 
@@ -377,7 +373,7 @@ function showPopup() {
     .then(data => {
 
         analyzeEulaText(data.texts.join(" ")).then(data => {
-        //analyzeEulaText(" ").then(data => {
+        // analyzeEulaText(" ").then(data => {
         //   data={
         //     "raw": [],
         //     "ranked": [],
@@ -403,6 +399,16 @@ function showPopup() {
         loadingButton.style.display = "none" 
         popupContainer.style.display = "";
 
+        const vals = Object.values(data.categoryAverages);
+        const sum = vals.reduce((acc, val) => acc + val, 0);
+        const avg = Math.floor(sum / vals.length); // replace main arc with sum
+        
+        const mainScoreArc = createScoreArc(avg, 180)
+        mainScoreArc.classList.add("popup-main-score-arc")
+        const mainScoreValue = document.createElement("div")
+        mainScoreValue.classList.add("popup-main-score-value")
+        mainScoreValue.innerText = `${sum}/150`
+      
         mainScoreArcContainer.appendChild(mainScoreArc)
         mainScoreArcContainer.appendChild(mainScoreValue)
       
@@ -439,11 +445,6 @@ function showPopup() {
           categoriesContainer.appendChild(categoryContainer)
 
         }
-        const vals = Object.values(data.categoryAverages);
-        const sum = vals.reduce((acc, val) => acc + val, 0);
-        const avg = sum / vals.length; // replace main arc with sum
-        
-        mainScoreValue.innerText = `${Math.floor(sum)}/150`; //replace main arc text
 
     
 
