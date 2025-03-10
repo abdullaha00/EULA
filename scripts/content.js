@@ -49,6 +49,14 @@ function getRandomColor() {
 
 const color = getRandomColor()
 
+function contextualise_link(icon_link){
+  if (icon_link.slice(0,1) == "/"){
+    console.log("icon link", window.location.origin.concat(icon_link))
+    return window.location.origin.concat(icon_link)
+  }
+    console.log("icon link", icon_link)
+    return icon_link
+}
 
 function getPageIcon() {
 
@@ -56,7 +64,7 @@ function getPageIcon() {
   const links = document.getElementsByTagName("link")
   for (const link of links) {
     if (link.getAttribute("rel") == "apple-touch-icon" || (link.getAttribute("rel") == "icon" && link.getAttribute("rel")=="image/png")) {
-      return link.getAttribute("href")
+      return contextualise_link(link.getAttribute("href"))
     }
   }
 
@@ -64,7 +72,7 @@ function getPageIcon() {
   const meta = document.getElementsByTagName("meta")
   for (const tag of meta) {
     if (tag.getAttribute("property")=="og:image") {
-      return tag.getAttribute("content")
+      return contextualise_link(tag.getAttribute("content"))
     }
   }
   
@@ -88,6 +96,7 @@ function addHiddenProfile() {
     
     let hasIcon = true
     let icon = getPageIcon()
+    console.log("icon is:", icon)
 
     if (!icon) {
       hasIcon = false
