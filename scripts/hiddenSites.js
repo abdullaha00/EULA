@@ -1,40 +1,118 @@
-function setHosts(arr){
-    site_list = document.getElementById("site-list")
-    site_list.innerHTML = '';
-    for (const host of arr){
-        const newListItem = document.createElement("li");
-        const newButton = document.createElement("button");
-        newButton.innerHTML = "&times;";
-        newButton.id = host;
-        newButton.classList.add("remove-btn");
-        if (host.length > 25){
-            newListItem.textContent = host.slice(0,25).concat("...");
-        }else{
-            newListItem.textContent = host;
+function setHosts(hosts){
+    
+    const container = document.getElementById("hidden-all-app-container")
+    console.log("container:", container);
+    
+    console.log("hosts:", hosts);
+    
+    for (const [id, v] of Object.entries(hosts)){
+        
+        const newAppContainer = document.createElement("div")
+        const newApp = document.createElement("div")
+        const newAppName = document.createElement("div")
+        const newAppDelete = document.createElement("div")
+
+        newAppDelete.innerHTML = "&times"
+
+        newAppDelete.classList.add("app-delete")
+        newAppContainer.classList.add("app-container")
+        newApp.classList.add("app")
+
+        if (v.hasLogo) {
+            newApp.style.backgroundImage = `url(${v.logo})`
+            
+
+        } else {
+            newApp.style.backgroundColor = `${v.logo}`
+            newApp.classList.add("default-icon")
+            let name = id
+            let letter = name[0]
+            if (name.length > 3 && name.substring(0,3)=="www") {
+                letter = name[4]
+            }
+            newApp.innerText = `${letter.toUpperCase()}`
+
+            
         }
-        newListItem.title = host
-        newListItem.appendChild(newButton);
-        document.getElementById("site-list").appendChild(newListItem);
+
+        newAppName.classList.add("app-name")
+
+        newAppName.innerText = `${id}`
+        
+        newApp.appendChild(newAppDelete)
+        newAppContainer.appendChild(newApp)
+        newAppContainer.appendChild(newAppName)
+
+        newAppContainer.addEventListener("click", () => {removeHidden(id)})
+
+        container.appendChild(newAppContainer)
+    }
+    
+}
+
+function clearHosts() {
+
+    const container = document.getElementById("hidden-all-app-container")
+
+    while (container.firstChild) {
+        container.lastChild.remove()
     }
 }
 
+
+function removeHidden(id) {
+    chrome.storage.local.get(["tempData"], function (data) {
+        const newData = data["tempData"][0];
+        const newHidden = newData.hidden
+
+        delete newHidden[id]
+
+        newData.hidden = newHidden
+
+        chrome.storage.local.set({"tempData" : [newData]}).then(() => {
+            initHidden = newHidden
+            clearHosts()
+            setHosts(newHidden)
+        });
+    })
+}
+
+
+
+
 function search(hiddenFuse, host_arr) {
+    clearHosts()
+    
     const value = document.getElementById("hidden-search-bar").value
 
     if (value == "") {
-        console.log("empty")
-        return
+        setHosts(initHidden)
     }
-    hiddenFuse.search(value)
-    new_hosts = Array.from(hiddenFuse.search(value)).map(a => a.item)
-    setHosts(new_hosts)
+    const results = hiddenFuse.search(value)
+    const newHosts = {}
+    for (let i=0;i<results.length;i++) {
+        const id = results[i].item
+        const contents = initHidden[id]
+        newHosts[id] = contents
+    }
+    setHosts(newHosts)
+    
+    
     
     
 }
 
+
 chrome.storage.local.get(["tempData"], function (data) {
-    host_arr = data["tempData"][0]["hidden"];
-    setHosts(host_arr)
+    hosts = data["tempData"][0].hidden;
+    initHidden = hosts
+    setHosts(hosts)
+
+    
+    let hostnames = []
+    for (const [id,v] of Object.entries(hosts)) {
+        hostnames.push(id)
+    }
 
     const fuseOptions = {
         // isCaseSensitive: false,
@@ -51,30 +129,10 @@ chrome.storage.local.get(["tempData"], function (data) {
         // ignoreLocation: false,
         // ignoreFieldNorm: false,
         // fieldNormWeight: 1,
-        keys: [
-            "name"
-        ]
     };
 
-    const hiddenFuse = new Fuse(host_arr, fuseOptions)
-    if(document.getElementById("hidden-search-bar")){
-        console.log("test")
-    }
-    document.getElementById("hidden-search-bar").addEventListener("keyup", () => {search(hiddenFuse, host_arr)})
+    const hiddenFuse = new Fuse(hostnames)
+    document.getElementById("hidden-search-bar").addEventListener("keyup", () => {search(hiddenFuse, hostnames)})
   
   })
 
-document.querySelector("ul").addEventListener("click", function (event) {
-    if (event.target.classList.contains("remove-btn")) {
-        host = event.target.id;
-        chrome.storage.local.get(["tempData"], function (data) {
-            var index = data["tempData"][0]["hidden"].indexOf(host);
-            if (index !== -1) {
-                data["tempData"][0]["hidden"].splice(index, 1);
-            }
-            chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
-                event.target.parentElement.remove();
-            });
-          });
-    }
-});

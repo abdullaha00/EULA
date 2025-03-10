@@ -6,26 +6,17 @@
 // scoring of user preferences
 // based on the survey results, have a multiplier on the score given by the LLM
 
-// example data:
-// {
-//     "age_group": "Above 60",
-//     "content_creation": "sometimes",
-//     "litigation_concern": "not_concerned",
-//     "privacy_concern": "slightly_concerned",
-//     "security_concern": "moderately_concerned",
-//     "timestamp": "2025-03-04T11:30:24.631Z"
-// }
-export const exampleSurveyData = {
-    "age_group": "Above 60",
-    "content_creation": "sometimes",
-    "litigation_concern": "not_concerned",
+const exampleSurveyData = {
+    "age_group": "40 to 60",
+    "content_creation": "often",
+    "litigation_concern": "slightly_concerned",
     "privacy_concern": "slightly_concerned",
-    "security_concern": "moderately_concerned",
+    "security_concern": "slightly_concerned",
     "timestamp": "2025-03-04T11:30:24.631Z"
 };
 
 // Predefined categories with default multiplier of 1
-export const example_category_array = {
+const example_category_array = {
     "Grant of License": 1,
     "Restrictions of Use": 1,
     "Ownership & IP": 1,
@@ -43,9 +34,12 @@ export const example_category_array = {
     "Changes to EULA": 1,
 };
 
-export function score_user_preferences(surveyData, category_array) {
+function score_user_preferences(surveyData, category_array) {
+    console.log(surveyData);
+    console.log(category_array);
     // Ensure a valid survey result is passed
     if (!surveyData) {
+        // console.log("Cannot read survey data!");
         console.error("No survey data provided");
         return category_array;
     }
@@ -59,11 +53,11 @@ export function score_user_preferences(surveyData, category_array) {
 
     // Content creation adjustments for Ownership & IP
     const contentCreationMultipliers = {
-        "Never": 0.5,
-        "Rarely": 0.8,
-        "Sometimes": 1.0,
-        "Often": 1.2,
-        "Very Often": 1.5
+        "never": 0.5,
+        "rarely": 0.8,
+        "sometimes": 1.0,
+        "often": 1.2,
+        "very_often": 1.5
     };
     if (surveyData.content_creation in contentCreationMultipliers) {
         category_array["Ownership & IP"] *= contentCreationMultipliers[surveyData.content_creation];
@@ -107,21 +101,6 @@ export function score_user_preferences(surveyData, category_array) {
         category_array["Security"] *= securityMultipliers[surveyData.security_concern];
     }
     return category_array;
-}
-
-async function getSurveyResults() {
-    try {
-        const result = await chrome.storage.local.get(['surveyResults']);
-        if (result.surveyResults) {
-            const adjustedScores = score_user_preferences(result.surveyResults);
-            
-            // Save the adjusted scores to Chrome storage
-            await chrome.storage.local.set({ 'categoryScores': adjustedScores });
-            console.log('Category scores saved to Chrome storage'); // can be removed
-        }
-    } catch (error) {
-        console.error('Error retrieving survey results:', error);
-    }
 }
 
 //Usage example (for debugging)

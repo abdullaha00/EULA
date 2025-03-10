@@ -1,7 +1,14 @@
 // automatic popup script
 
+// chrome.storage.local.get(["tempData"], function (data) {
+//   console.log("all data:", data.tempData[0])
+// });
+
 const link_words = ["policy", "terms", "privacy", "notice"];
 const base = 'https://as3495.user.srcf.net/';
+let initHidden
+
+let uniqueLinks = []; //store unique links to use in showPopup()
 
 const categoryMap = {
   1  : "Grant of License",
@@ -40,6 +47,16 @@ function getRandomColor() {
   return colors[keys[ keys.length * Math.random() << 0]];
 }
 
+const color = getRandomColor()
+
+function contextualise_link(icon_link){
+  if (icon_link.slice(0,1) == "/"){
+    console.log("icon link", window.location.origin.concat(icon_link))
+    return window.location.origin.concat(icon_link)
+  }
+    console.log("icon link", icon_link)
+    return icon_link
+}
 
 function getPageIcon() {
 
@@ -47,7 +64,7 @@ function getPageIcon() {
   const links = document.getElementsByTagName("link")
   for (const link of links) {
     if (link.getAttribute("rel") == "apple-touch-icon" || (link.getAttribute("rel") == "icon" && link.getAttribute("rel")=="image/png")) {
-      return link.getAttribute("href")
+      return contextualise_link(link.getAttribute("href"))
     }
   }
 
@@ -55,7 +72,7 @@ function getPageIcon() {
   const meta = document.getElementsByTagName("meta")
   for (const tag of meta) {
     if (tag.getAttribute("property")=="og:image") {
-      return tag.getAttribute("content")
+      return contextualise_link(tag.getAttribute("content"))
     }
   }
   
@@ -71,24 +88,39 @@ function addProfile() {
 
 function addHiddenProfile() {
   currentHost = window.location.hostname;
-  if (currentHost.slice(0,4) === "www."){
-    currentHost = currentHost.slice(4)
-  }
+
   chrome.storage.local.get(["tempData"], function (data) {
-    let loc = data.tempData[0].hidden.length
-    for (const id in data.tempData[0].hidden){
-      console.log(id, currentHost, data.tempData[0].hidden[id], currentHost.localeCompare(data.tempData[0].hidden[id]))
-      if (currentHost.localeCompare(data.tempData[0].hidden[id]) === -1){
-        loc = id;
-        break
-      };
-    } 
-    data.tempData[0].hidden.splice(loc, 0, currentHost)
-    console.log(data.tempData[0].hidden)
-    chrome.storage.local.set({"tempData" : data["tempData"]}).then(() => {
+    let newData = data.tempData[0]
+    let newHidden = newData.hidden
+    console.log(newHidden);
+    
+    let hasIcon = true
+    let icon = getPageIcon()
+    console.log("icon is:", icon)
+
+    if (!icon) {
+      hasIcon = false
+      icon = color
+    }
+
+    const entry = {
+      hasLogo: hasIcon,
+      logo: icon
+    }
+
+
+    newHidden[currentHost] = entry
+    newData.hidden = newHidden
+    console.log(newData.hidden);
+    console.log("coming soon:", newData)
+
+    chrome.storage.local.set({"tempData" : [newData]}).then(() => {
       closePopup()
     });
   });
+  setTimeout(() => {chrome.storage.local.get(["tempData"], function (data) { console.log("new!!", data.tempData[0])})
+}, 1000);
+
 }
 
 
@@ -162,10 +194,13 @@ function moveHint(e) {
   categoryHint.style.transform = `translateX(${e.clientX-rect.left}px) translateY(${e.clientY - rect.top}px)`
 }
 
+
+
 function showPopup() {
 
   const host = document.createElement("span")
   host.setAttribute("id", "popup-host")
+  host.style.all = "initial" // prevent webpage styling affecting us
   const shadow = host.attachShadow({mode: "open"})
 
   const reshowPopupButton = document.createElement("div")
@@ -174,6 +209,12 @@ function showPopup() {
   reshowPopupButton.addEventListener("click", () => {popupContainer.style.display = "block"; reshowPopupButton.style.display = "none"})
   reshowPopupButton.style.display = "none" // hide for now
 
+  const loadingButton = document.createElement("div")
+  loadingButton.setAttribute("id", "reshow-popup-button")
+  loadingButton.style.backgroundImage = `url(${chrome.runtime.getURL("resources/extension-icons/ring-resize.svg")})`
+  loadingButton.addEventListener("click", () => {popupContainer.style.display = "block"; reshowPopupButton.style.display = "none"})
+  //loadingButton.style.display = "none" // hide for now
+  
 
   const popupContainer = document.createElement("div")
   popupContainer.setAttribute("id", "popup-container")
@@ -250,7 +291,7 @@ function showPopup() {
     siteIcon.innerText = letter.toUpperCase()
 
     // set random background color
-    siteIcon.style.backgroundColor = getRandomColor()
+    siteIcon.style.backgroundColor = color
 
   } else {
     siteIcon = document.createElement("img")
@@ -274,49 +315,14 @@ function showPopup() {
 
   const mainScoreArcContainer = document.createElement("div")
   mainScoreArcContainer.classList.add("popup-main-score-arc-container")
-  const mainScoreArc = createScoreArc(3, 180)
-  mainScoreArc.classList.add("popup-main-score-arc")
 
-  const mainScoreValue = document.createElement("div")
-  mainScoreValue.classList.add("popup-main-score-value")
-  mainScoreValue.innerText = "3/5"
 
-  mainScoreArcContainer.appendChild(mainScoreArc)
-  mainScoreArcContainer.appendChild(mainScoreValue)
+
 
 
   const categoriesContainer = document.createElement("div")
   categoriesContainer.classList.add("popup-categories-container")
 
-  for ([id, val] of Object.entries(categoryMap)) {
-    const categoryContainer = document.createElement("div")
-    const categoryIcon = document.createElement("div")
-    const categoryArc = createScoreArc(5, 80)
-    
-    categoryContainer.classList.add("popup-category-container")
-    categoryIcon.classList.add("popup-category-icon")
-    categoryArc.classList.add("popup-category-arc")
-
-    const url = `resources/icons/${id}.svg`
-    categoryIcon.style.backgroundImage = `url(${chrome.runtime.getURL(url)})`
-
-
-    const categoryHint = document.createElement("div")
-    categoryHint.classList.add("popup-category-hint")
-    categoryHint.setAttribute("id", `popup-category-hint-${id}`)
-    categoryHint.innerText = categoryMap[id]
-    categoryHint.style.display = "none" // initially hidden
-
-    categoryContainer.id = id
-    categoryContainer.addEventListener("mouseenter", showHint)
-    categoryContainer.addEventListener("mouseleave", hideHint)
-    categoryContainer.addEventListener("mousemove", moveHint)
-
-    categoryContainer.appendChild(categoryHint)
-    categoryContainer.appendChild(categoryIcon)
-    categoryContainer.appendChild(categoryArc)
-    categoriesContainer.appendChild(categoryContainer)
-  }
 
   arcsContainer.appendChild(mainScoreArcContainer)
   arcsContainer.appendChild(categoriesContainer)
@@ -357,12 +363,106 @@ function showPopup() {
   style.href = chrome.runtime.getURL("popup/styles/popup.css")
 
   // overlay popup onto document
+
+  shadow.appendChild(style)
+
   shadow.appendChild(popupContainer)
   shadow.appendChild(reshowPopupButton)
-  shadow.appendChild(style)
-  document.body.appendChild(host)
+  shadow.appendChild(loadingButton)
+
+  document.body.appendChild(host);
   // document.body.appendChild(reshowPopupButton)
+
+  popupContainer.style.display = "none";
+
+  //// update using parsed version of first element in fetchedResults for now
   
+  fetch(base.concat(encodeURIComponent(encodeURIComponent(uniqueLinks[0])))) // TODO: parse and update more than just link1 and update dynamically
+    .then(res => res.json())
+    .then(data => {
+
+        analyzeEulaText(data.texts.join(" ")).then(data => {
+        // analyzeEulaText(" ").then(data => {
+        //   data={
+        //     "raw": [],
+        //     "ranked": [],
+        //     "triples": [],
+        //     "categoryAverages": {
+        //         "Grant of License": 1,
+        //         "Restrictions of Use": 2,
+        //         "Ownership & IP": 3,
+        //         "User responsibilities": 4,
+        //         "Privacy & Data": 5,
+        //         "Security": 1,
+        //         "Third-party Services": 2,
+        //         "Fees and Payments": 0,
+        //         "Updates and Modifications": 3,
+        //         "Support and Maintenance": 4,
+        //         "Warranties": 0,
+        //         "Liability": 1,
+        //         "Dispute Resolution": 5,
+        //         "Governing Law": 2,
+        //         "Changes to EULA": 3
+        //     }
+        // }
+        loadingButton.style.display = "none" 
+        popupContainer.style.display = "";
+        //analyzeEulaText(" ").then(data => {
+        console.log("this is the data")
+          console.log(data);
+        
+
+        const vals = Object.values(data.categoryAverages);
+        const sum = vals.reduce((acc, val) => acc + val, 0);
+        const avg = Math.floor(sum / vals.length); // replace main arc with sum
+        
+        const mainScoreArc = createScoreArc(avg, 180)
+        mainScoreArc.classList.add("popup-main-score-arc")
+        const mainScoreValue = document.createElement("div")
+        mainScoreValue.classList.add("popup-main-score-value")
+        mainScoreValue.innerText = `${sum}/150`
+      
+        mainScoreArcContainer.appendChild(mainScoreArc)
+        mainScoreArcContainer.appendChild(mainScoreValue)
+      
+        const valuesArray = Object.values(data.categoryAverages);
+
+
+        for ([id, val] of Object.entries(categoryMap)) {
+          const categoryContainer = document.createElement("div")
+          const categoryIcon = document.createElement("div")
+          const categoryArc = createScoreArc(valuesArray[id-1], 80)
+          
+          categoryContainer.classList.add("popup-category-container")
+          categoryIcon.classList.add("popup-category-icon")
+          categoryArc.classList.add("popup-category-arc")
+
+          const url = `resources/icons/${id}.svg`
+          categoryIcon.style.backgroundImage = `url(${chrome.runtime.getURL(url)})`
+
+
+          const categoryHint = document.createElement("div")
+          categoryHint.classList.add("popup-category-hint")
+          categoryHint.setAttribute("id", `popup-category-hint-${id}`)
+          categoryHint.innerText = categoryMap[id]
+          categoryHint.style.display = "none" // initially hidden
+
+          categoryContainer.id = id
+          categoryContainer.addEventListener("mouseenter", showHint)
+          categoryContainer.addEventListener("mouseleave", hideHint)
+          categoryContainer.addEventListener("mousemove", moveHint)
+
+          categoryContainer.appendChild(categoryHint)
+          categoryContainer.appendChild(categoryIcon)
+          categoryContainer.appendChild(categoryArc)
+          categoriesContainer.appendChild(categoryContainer)
+
+        }
+
+    
+
+      });
+    })
 }
 
 function scrape_links(){
@@ -370,45 +470,51 @@ function scrape_links(){
     .filter(a => link_words.some(phrase => a.textContent.toLowerCase().includes(phrase)))
     .map(a => a.href);
 
-    const unique_links = [...new Set(relevant_links)];
-    unique_links.forEach(link => {
+    uniqueLinks = [...new Set(relevant_links)];
+    uniqueLinks.forEach(link => {
         fetch(base.concat(encodeURIComponent(encodeURIComponent(link))))
         .then(res => res.json())
-        .then(console.log)
+        .then(data => {
+          console.log(data);
+    })
     });
-    return unique_links.length
+    return uniqueLinks.length
 };
 
 chrome.storage.local.get(["tempData"], function (data) {
-    console.log(data["tempData"][0])
-    const tempData = data.tempData[0] 
-    let match = false
-    let currentHost = window.location.hostname;
-    if (currentHost.slice(0,4) === "www."){
-      currentHost = currentHost.slice(4)
-    }
-    console.log(currentHost)
-    for (const id in tempData.profiles){
-        if (currentHost === tempData.profiles[id].hostname){
-            match = true;
-            break;
-        }
-    }
-    for (const host of tempData.hidden){
-      if (currentHost === host){
-        match = true;
-        break;
+  console.log(data["tempData"][0])
+  const tempData = data.tempData[0] 
+  let match = false
+  let currentHost = window.location.hostname;
+  console.log(currentHost)
+  for (const id in tempData.profiles){
+      if (currentHost === tempData.profiles[id].hostname){
+          match = true;
+          break;
       }
-    }
-    match = false // to remove
-    if (!match){
-        setTimeout(() => {
-            let found = scrape_links();
-            found = 1 // to remove
-            if (found > 0){
-              showPopup()
-            }
-            
-        }, 1000);
-    }
-;});
+  }
+
+  // for (const host of Object.keys(tempData.hidden)){
+  //   console.log("hcts ....", host)
+  //   if (currentHost === host){
+  //     console.log("match!")
+  //     match = true;
+  //     break;
+  //   }
+  // }
+
+  if (tempData.hidden[currentHost]) {
+    match = true
+  }
+  
+
+  if (!match){
+      setTimeout(() => {
+          let found = scrape_links();
+          if (found > 0){
+            showPopup()
+          }
+          
+      }, 1000);
+  };
+  });

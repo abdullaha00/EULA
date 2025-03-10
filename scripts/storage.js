@@ -146,18 +146,24 @@ let tempData = {
         }
 
     }, 
-    hidden : []
+    hidden : {}
 }
 
-// COMMENT THIS OUT LATER
-chrome.storage.local.get(["tempData"], function(data) {
-    if(data == null){
-        console.log("init")
-        chrome.storage.local.set({"tempData" : [tempData]}, function() {
-        return true
-    })}
+
+// keep this for now so everyone has a valid tempData
+// chrome.storage.local.set({"tempData" : [tempData]}, function() {
+//     return true
+// })
+
+// // COMMENT THIS OUT LATER
+// chrome.storage.local.get(["tempData"], function(data) {
+//     if(data == null){
+//         console.log("init")
+//         chrome.storage.local.set({"tempData" : [tempData]}, function() {
+//         return true
+//     })}
     
-})
+// })
 
 
 

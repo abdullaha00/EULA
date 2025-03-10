@@ -58,7 +58,7 @@ function highlight(phrase) {
     }
     
   }
-
+console.log("start highlighting")
 const phrases = Array.from(document.querySelectorAll("p, li"))
   .forEach(p => {highlight(p);});
 

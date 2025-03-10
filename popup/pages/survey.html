@@ -16,10 +16,26 @@
             <div class="centered-survey">
                 <div class="survey-container">
                     <h1>Fill in Preferences</h1>
+                    <p class="survey-description">
+                        Help us tailor your extension experience! Your preferences will help to
+                        make the scoring system more revelant and personalised. 
+                        This quick survey takes less than 2 minutes to complete.
+                        <br>
+                        Note: The data provided is stored locally and your data is NEVER sold. 
+                    </p>
                     <form id="surveyForm" class="survey-form">
                         <!-- Question 1: Age Group -->
                         <div class="form-group">
-                            <label>1. What is your age group?</label>
+                            <label>1. What is your age group?
+                                <span class="info-icon" role="button" aria-label="More information">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                    </svg>
+                                    <div class="tooltip">
+                                        Categories that are more relevant to your age group will get a higher score. 
+                                    </div>
+                                </span>
+                            </label>
                             <div class="radio-group">
                                 <label><input type="radio" name="age_group" value="18 to 24" required> 18 to 24</label>
                                 <label><input type="radio" name="age_group" value="25 to 39"> 25 to 39</label>
@@ -41,7 +57,16 @@
 
                         <!-- Question 3: Social Media Posting Frequency -->
                         <div class="form-group">
-                            <label>3. How often do you post content on social media?</label>
+                            <label>3. How often do you post content (photos, videos etc.) on social media?
+                                <span class="info-icon" role="button" aria-label="More information">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                    </svg>
+                                    <div class="tooltip">
+                                        Copyright and IP will be more relevant to you if you post frequently on social media.
+                                    </div>
+                                </span>
+                            </label>
                             <div class="radio-group">
                                 <label><input type="radio" name="content_creation" value="never" required> Never</label>
                                 <label><input type="radio" name="content_creation" value="rarely"> Rarely</label>

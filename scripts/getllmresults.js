@@ -1,26 +1,46 @@
-import {askLLMForAll} from '../text_extraction/llmparse.js';
-import {categorizeSentences, categories, sentences} from '../text_extraction/filter.js';
-import {exampleSurveyData, example_category_array, score_user_preferences} from './score-multiplier.js';
-
 // Main analysis pipeline
-export async function analyzeEulaText(text, categories) {
+async function analyzeEulaText(text) {
     try {
+        text = splitTextIntoSentences(text);
         // Parse sentence
-        const categorized = categorizeSentences(text, categories);
-        
+        console.log("text:", text);
+        const categorized = categorizeSentences(text, category_items);
+        console.log("Categorized sentences:", categorized);
         // Send to LLM for analysis
-        const score_by_category = await askLLMForAll(categorized);
-        return score_by_category;
-        // Send to score multiplier
-        //const final_score_by_category_array = score_user_preferences(exampleSurveyData, example_category_array);
+        const results = await processLLMResults(categorized, categories);
+        console.log("results parsed!")
+        console.log(results);
 
-        //return final_score_by_category_array;
+        // Send to score multiplier
+        const surveyData = await getSurveyData();
+        // console.log("survey data!");
+        // console.log(surveyData);
+        results.categoryAverages = score_user_preferences(surveyData, results.categoryAverages); 
+       
+        console.log(results)
+        return results;
     
     } catch (error) {
+        console.log("catch error...")
         console.error('Analysis failed:', error);
         throw error;
     }
 }
 
-const test = analyzeEulaText(sentences, categories)
-console.log(test)
+async function getSurveyData() {
+    try {
+        const result = await chrome.storage.local.get(['surveyResults']);
+        return result.surveyResults || exampleSurveyData;
+    } catch (error) {
+        console.error('Error with Chrome storage', error);
+        return exampleSurveyData;
+    }
+}
+
+
+// For Debugging Use 
+// async function main() {
+//     const test = await analyzeEulaText(debug_sentences)
+//     console.log(test)
+// }
+// main();
